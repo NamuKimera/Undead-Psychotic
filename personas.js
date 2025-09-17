@@ -1,4 +1,4 @@
-class Asesino {
+class Personas {
     constructor() {
         
     }
