@@ -1,14 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Undead Psychotic</title>
-</head>
-<body>
-    <!-- Importamos al asesino -->
-    <script src="asesino.js"></script>
-    <!-- Importamos a las personas -->
-    <script src="personas.js"></script>
-</body>
+<html>
+    <head>
+
+        <style>
+            body {
+                margin: 0px
+            }
+        </style>
+
+        <script src="utils.js"></script>
+
+        <!-- importamos pixi -->
+        <script src="pixi.js"></script>
+        <!-- importamos la clase juego -->
+        <script src="juego.js"></script>
+        <script src="asesino.js"></script>
+        <!-- y cada conejito -->
+        <script src="personas.js"></script>
+    </head>
+    <body>
+        <script>
+            // todo empieza aca (Entry Point).
+            // creamos una instancia de la clase juego
+            const juego = new Juego()
+        </script>
+    </body>
 </html>
