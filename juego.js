@@ -47,8 +47,8 @@ class Juego {
     //es decir: en cada frame vamos a ejecutar el metodo this.gameLoop
     this.pixiApp.ticker.add(this.gameLoop.bind(this));
     this.agregarInteractividadDelMouse();
-    // this.asignarPerseguidorRandomATodos();
-    // this.asignarTargets();
+    this.asignarPerseguidorRandomATodos();
+    this.asignarTargets();
     this.asignarElMouseComoTargetATodosLosCiudadanos();
   }
   agregarInteractividadDelMouse() {
@@ -68,6 +68,9 @@ class Juego {
   getCiudadanoRandom() {
     return this.ciudadanos[Math.floor(this.ciudadanos.length * Math.random())];
   }
+  getPoliciaRandom() {
+    return this.policias[Math.floor(this.policias.length * Math.random())];
+  }
   asignarTargets() {
     for (let cone of this.ciudadanos) {
       cone.asignarTarget(this.getCiudadanoRandom());
@@ -78,9 +81,14 @@ class Juego {
       cone.asignarTarget(this.mouse);
     }
   }
+  asignarElMouseComoTargetATodosLosPolicias() {
+    for (let cone of this.policias) {
+      cone.asignarTarget(this.mouse);
+    }
+  }
   asignarPerseguidorRandomATodos() {
     for (let cone of this.ciudadanos) {
-      cone.perseguidor = this.getCiudadanoRandom();
+      cone.perseguidor = this.getPoliciaRandom();
     }
   }
   asignarElMouseComoPerseguidorATodosLosCiudadanos() {

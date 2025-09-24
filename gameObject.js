@@ -54,7 +54,6 @@ class GameObject {
 
     this.juego.pixiApp.stage.addChild(this.container);
   }
-
   cambiarAnimacion(cual) {
     //hacemos todos invisibles
     for (let key of Object.keys(this.spritesAnimados)) {
@@ -63,7 +62,6 @@ class GameObject {
     //y despues hacemos visible el q queremos
     this.spritesAnimados[cual].visible = true;
   }
-
   cargarSpritesAnimados(textureData) {
     for (let key of Object.keys(textureData.animations)) {
       this.spritesAnimados[key] = new PIXI.AnimatedSprite(
@@ -79,7 +77,6 @@ class GameObject {
       this.container.addChild(this.spritesAnimados[key]);
     }
   }
-
   tick() {
     //TODO: hablar de deltatime
     this.aceleracion.x = 0;
@@ -90,27 +87,18 @@ class GameObject {
     this.escapar();
     this.perseguir();
     this.limitarAceleracion();
-    this.velocidad.x +=
-      this.aceleracion.x * this.juego.pixiApp.ticker.deltaTime;
-    this.velocidad.y +=
-      this.aceleracion.y * this.juego.pixiApp.ticker.deltaTime;
-
+    this.velocidad.x += this.aceleracion.x * this.juego.pixiApp.ticker.deltaTime;
+    this.velocidad.y += this.aceleracion.y * this.juego.pixiApp.ticker.deltaTime;
     //variaciones de la velocidad
     this.rebotar();
     this.aplicarFriccion();
     this.limitarVelocidad();
-
     //pixeles por frame
     this.posicion.x += this.velocidad.x * this.juego.pixiApp.ticker.deltaTime;
     this.posicion.y += this.velocidad.y * this.juego.pixiApp.ticker.deltaTime;
-
     //guardamos el angulo
-    this.angulo =
-      radianesAGrados(Math.atan2(this.velocidad.y, this.velocidad.x)) + 180;
-
-    this.velocidadLineal = Math.sqrt(
-      this.velocidad.x * this.velocidad.x + this.velocidad.y * this.velocidad.y
-    );
+    this.angulo = radianesAGrados(Math.atan2(this.velocidad.y, this.velocidad.x)) + 180;
+    this.velocidadLineal = Math.sqrt(this.velocidad.x * this.velocidad.x + this.velocidad.y * this.velocidad.y);
   }
 
   separacion() {
