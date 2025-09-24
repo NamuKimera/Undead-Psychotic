@@ -1,4 +1,4 @@
-class Personas {
+class Persona extends GameObject {
     constructor() {
         
     }

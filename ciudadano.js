@@ -1,4 +1,4 @@
-class Asesino extends Persona {
+class Ciudadano extends Persona {
     constructor() {
         
     }
