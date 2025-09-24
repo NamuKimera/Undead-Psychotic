@@ -22,28 +22,21 @@ class GameObject {
     this.posicion = { x: x, y: y };
     this.velocidad = { x: Math.random() * 10, y: Math.random() * 10 };
     this.aceleracion = { x: 0, y: 0 };
-
     this.juego = juego;
     //generamos un ID para este conejito
     this.id = Math.floor(Math.random() * 99999999);
-
     // tomo como parametro la textura y creo un sprite
-
     this.cargarSpritesAnimados(textureData);
-
     this.cambiarAnimacion("caminarAbajo");
-
-    // this.sprite.play();
-    // this.sprite.loop = true;
-    // this.sprite.animationSpeed = 0.1;
-    // this.sprite.scale.set(2);
-
-    // //le asigno x e y al sprite
-    // this.sprite.x = x;
-    // this.sprite.y = y;
-
+    this.sprite.play();
+    this.sprite.loop = true;
+    this.sprite.animationSpeed = 0.1;
+    this.sprite.scale.set(2);
+    // le asigno x e y al sprite
+    this.sprite.x = x;
+    this.sprite.y = y;
     // //establezco el punto de pivot en el medio:
-    // this.sprite.anchor.set(0.5);
+    this.sprite.anchor.set(0.5);
 
     // //agrego el sprite al stage
     // //this.juego es una referencia a la instancia de la clase Juego
