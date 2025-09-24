@@ -1,6 +1,7 @@
 class Juego {
   pixiApp;
   ciudadanos = [];
+  policias = [];
   width;
   height;
 
