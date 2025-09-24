@@ -6,7 +6,6 @@ class Boid {
             (Math.random() - 0.5) * 2
         );
         this.acceleration = new Vector2D();
-
         // Crear sprite triangular
         this.sprite = new PIXI.Graphics();
         this.updateSprite();
@@ -23,7 +22,6 @@ class Boid {
         ]);
         this.sprite.endFill();
     }
-
     update() {
         // Aplicar las reglas de boids
         const sep = this.separate();
@@ -36,32 +34,26 @@ class Boid {
         ali.multiply(config.alignmentFactor);
         coh.multiply(config.cohesionFactor);
         edge.multiply(config.edgeAvoidance);
-
         // Sumar fuerzas
         this.acceleration.add(sep);
         this.acceleration.add(ali);
         this.acceleration.add(coh);
         this.acceleration.add(edge);
-
         // Limitar aceleración
         this.acceleration.limit(config.maxForce);
         // Actualizar velocidad y posición
         this.velocity.add(this.acceleration);
         this.velocity.limit(config.maxSpeed);
         this.position.add(this.velocity);
-
         // Wrap around edges
         this.wrapEdges();
-
         // Reset acceleration
         this.acceleration.multiply(0);
-
         // Actualizar sprite
         this.sprite.x = this.position.x;
         this.sprite.y = this.position.y;
         this.sprite.rotation = Math.atan2(this.velocity.y, this.velocity.x) + Math.PI / 2;
     }
-
     separate() {
         const steer = new Vector2D();
         let count = 0;
@@ -76,7 +68,6 @@ class Boid {
                 count++;
             }
         }
-
         if (count > 0) {
             steer.divide(count);
             steer.normalize();
@@ -86,7 +77,6 @@ class Boid {
         }
         return steer;
     }
-
     align() {
         const sum = new Vector2D();
         let count = 0;
@@ -98,7 +88,6 @@ class Boid {
                 count++;
             }
         }
-
         if (count > 0) {
             sum.divide(count);
             sum.normalize();
@@ -109,7 +98,6 @@ class Boid {
         }
         return new Vector2D();
     }
-
     cohesion() {
         const sum = new Vector2D();
         let count = 0;
@@ -121,12 +109,10 @@ class Boid {
                 count++;
             }
         }
-
         if (count > 0) {
             sum.divide(count);
             return this.seek(sum);
         }
-
         return new Vector2D();
     }
 
@@ -134,12 +120,10 @@ class Boid {
         const desired = Vector2D.subtract(target, this.position);
         desired.normalize();
         desired.multiply(config.maxSpeed);
-
         const steer = Vector2D.subtract(desired, this.velocity);
         steer.limit(config.maxForce);
         return steer;
     }
-
     avoidEdges() {
         const steer = new Vector2D();
         const margin = 50;
@@ -149,23 +133,19 @@ class Boid {
         } else if (this.position.x > app.screen.width - margin) {
             steer.x = -config.maxSpeed;
         }
-
         if (this.position.y < margin) {
             steer.y = config.maxSpeed;
         } else if (this.position.y > app.screen.height - margin) {
             steer.y = -config.maxSpeed;
         }
-
         return steer;
     }
-
     wrapEdges() {
         if (this.position.x < -10) this.position.x = app.screen.width + 10;
         if (this.position.x > app.screen.width + 10) this.position.x = -10;
         if (this.position.y < -10) this.position.y = app.screen.height + 10;
         if (this.position.y > app.screen.height + 10) this.position.y = -10;
     }
-
     destroy() {
         app.stage.removeChild(this.sprite);
     }
