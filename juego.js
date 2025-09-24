@@ -16,12 +16,9 @@ class Juego {
   async initPIXI() {
     //creamos la aplicacion de pixi y la guardamos en la propiedad pixiApp
     this.pixiApp = new PIXI.Application();
-
     this.pixiApp.stage.name = "el stage";
-
     //esto es para que funcione la extension de pixi
     globalThis.__PIXI_APP__ = this.pixiApp;
-
     const opcionesDePixi = {
       background: "#1099bb",
       width: this.width,
@@ -29,20 +26,15 @@ class Juego {
       antialias: false,
       SCALE_MODE: PIXI.SCALE_MODES.NEAREST,
     };
-
     //inicializamos pixi con las opciones definidas anteriormente
     //await indica q el codigo se frena hasta que el metodo init de la app de pixi haya terminado
     //puede tardar 2ms, 400ms.. no lo sabemos :O
     await this.pixiApp.init(opcionesDePixi);
-
     // //agregamos el elementos canvas creado por pixi en el documento html
     document.body.appendChild(this.pixiApp.canvas);
-
     //cargamos la imagen bunny.png y la guardamos en la variable texture
     const texture = await PIXI.Assets.load("bunny.png");
-
     const animacionesPersonaje1 = await PIXI.Assets.load("img/personaje.json");
-
     for (let i = 0; i < 100; i++) {
       const x = 0.5 * this.width;
       const y = 0.5 * this.height;
@@ -51,25 +43,20 @@ class Juego {
       const conejito = new Ciudadano(animacionesPersonaje1, x, y, this);
       this.ciudadanos.push(conejito);
     }
-
     //agregamos el metodo this.gameLoop al ticker.
     //es decir: en cada frame vamos a ejecutar el metodo this.gameLoop
     this.pixiApp.ticker.add(this.gameLoop.bind(this));
-
     this.agregarInteractividadDelMouse();
-
     // this.asignarPerseguidorRandomATodos();
     // this.asignarTargets();
     this.asignarElMouseComoTargetATodosLosCiudadanos();
   }
-
   agregarInteractividadDelMouse() {
     // Escuchar el evento mousemove
     this.pixiApp.canvas.onmousemove = (event) => {
       this.mouse.posicion = { x: event.x, y: event.y };
     };
   }
-
   gameLoop(time) {
     //iteramos por todos los ciudadanos
     for (let unCiudadano of this.ciudadanos) {
@@ -78,23 +65,19 @@ class Juego {
       unCiudadano.render();
     }
   }
-
   getCiudadanoRandom() {
     return this.ciudadanos[Math.floor(this.ciudadanos.length * Math.random())];
   }
-
   asignarTargets() {
     for (let cone of this.ciudadanos) {
       cone.asignarTarget(this.getCiudadanoRandom());
     }
   }
-
   asignarElMouseComoTargetATodosLosCiudadanos() {
     for (let cone of this.ciudadanos) {
       cone.asignarTarget(this.mouse);
     }
   }
-
   asignarPerseguidorRandomATodos() {
     for (let cone of this.ciudadanos) {
       cone.perseguidor = this.getCiudadanoRandom();
