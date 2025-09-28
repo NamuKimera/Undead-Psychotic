@@ -22,6 +22,7 @@ class Boid {
         ]);
         this.sprite.endFill();
     }
+
     update() {
         // Aplicar las reglas de boids
         const sep = this.separate();
@@ -54,6 +55,7 @@ class Boid {
         this.sprite.y = this.position.y;
         this.sprite.rotation = Math.atan2(this.velocity.y, this.velocity.x) + Math.PI / 2;
     }
+    
     separate() {
         const steer = new Vector2D();
         let count = 0;
@@ -77,6 +79,7 @@ class Boid {
         }
         return steer;
     }
+
     align() {
         const sum = new Vector2D();
         let count = 0;
@@ -98,6 +101,7 @@ class Boid {
         }
         return new Vector2D();
     }
+
     cohesion() {
         const sum = new Vector2D();
         let count = 0;
@@ -124,6 +128,7 @@ class Boid {
         steer.limit(config.maxForce);
         return steer;
     }
+
     avoidEdges() {
         const steer = new Vector2D();
         const margin = 50;
@@ -140,12 +145,14 @@ class Boid {
         }
         return steer;
     }
+
     wrapEdges() {
         if (this.position.x < -10) this.position.x = app.screen.width + 10;
         if (this.position.x > app.screen.width + 10) this.position.x = -10;
         if (this.position.y < -10) this.position.y = app.screen.height + 10;
         if (this.position.y > app.screen.height + 10) this.position.y = -10;
     }
+    
     destroy() {
         app.stage.removeChild(this.sprite);
     }

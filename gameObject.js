@@ -45,6 +45,7 @@ class GameObject {
     this.juego.pixiApp.stage.addChild(this.sprite);
     this.juego.pixiApp.stage.addChild(this.container);
   }
+
   cambiarAnimacion(cual) {
     //hacemos todos invisibles
     for (let key of Object.keys(this.spritesAnimados)) {
@@ -53,6 +54,7 @@ class GameObject {
     //y despues hacemos visible el q queremos
     this.spritesAnimados[cual].visible = true;
   }
+
   cargarSpritesAnimados(textureData) {
     for (let key of Object.keys(textureData.animations)) {
       this.spritesAnimados[key] = new PIXI.AnimatedSprite(
@@ -83,14 +85,6 @@ class GameObject {
       this.cambiarAnimacion("caminarArriba");
     } else {
       this.cambiarAnimacion("caminarAbajo");
-    }
-  }
-
-  cambiarDeSpriteSegunVelocidad() {
-    if (this.calcularVelocidadLineal() > 0) {
-      this.cambiarAnimacion("caminar");
-    } else {
-      this.cambiarAnimacion("parado");
     }
   }
 

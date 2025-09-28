@@ -4,6 +4,6 @@ class Ciudadano extends Persona {
     }
 
     getOtrosCiudadanos() {
-        return this.juego.ciudadano;
+        return this.juego.ciudadanos;
     }
 }

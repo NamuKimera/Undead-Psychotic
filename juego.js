@@ -34,8 +34,8 @@ class Juego {
     // //agregamos el elementos canvas creado por pixi en el documento html
     document.body.appendChild(this.pixiApp.canvas);
     //cargamos la imagen bunny.png y la guardamos en la variable texture
-    const texture = await PIXI.Assets.load("bunny.png");
-    const animacionesPersonaje1 = await PIXI.Assets.load("img/personaje.json");
+    const texture = await PIXI.Assets.load("img/ciudadano.png");
+    const animacionesPersonaje1 = await PIXI.Assets.load("img/asesino.json");
     for (let i = 0; i < 100; i++) {
       const x = 0.5 * this.width;
       const y = 0.5 * this.height;
@@ -52,46 +52,55 @@ class Juego {
     this.asignarTargets();
     this.asignarElMouseComoTargetATodosLosCiudadanos();
   }
+  
   agregarInteractividadDelMouse() {
     // Escuchar el evento mousemove
     this.pixiApp.canvas.onmousemove = (event) => {
       this.mouse.posicion = { x: event.x, y: event.y };
     };
   }
+  
   gameLoop(time) {
     //iteramos por todos los ciudadanos
     for (let unCiudadano of this.ciudadanos) {
-      //ejecutamos el metodo tick de cada conejito
+      //ejecutamos el metodo tick de cada ciudadano
       unCiudadano.tick();
       unCiudadano.render();
     }
   }
+  
   getCiudadanoRandom() {
     return this.ciudadanos[Math.floor(this.ciudadanos.length * Math.random())];
   }
+  
   getPoliciaRandom() {
     return this.policias[Math.floor(this.policias.length * Math.random())];
   }
+  
   asignarTargets() {
     for (let cone of this.ciudadanos) {
       cone.asignarTarget(this.getCiudadanoRandom());
     }
   }
+  
   asignarElMouseComoTargetATodosLosCiudadanos() {
     for (let cone of this.ciudadanos) {
       cone.asignarTarget(this.mouse);
     }
   }
+  
   asignarElMouseComoTargetATodosLosPolicias() {
     for (let cone of this.policias) {
       cone.asignarTarget(this.mouse);
     }
   }
+  
   asignarPerseguidorRandomATodos() {
     for (let cone of this.ciudadanos) {
       cone.perseguidor = this.getPoliciaRandom();
     }
   }
+
   asignarElMouseComoPerseguidorATodosLosCiudadanos() {
     for (let cone of this.ciudadanos) {
       cone.perseguidor = this.mouse;

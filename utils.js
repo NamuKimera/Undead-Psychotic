@@ -51,9 +51,9 @@ function initBoids() {
 
   // Crear nuevos boids
   for (let i = 0; i < config.boidCount; i++) {
-  const x = Math.random() * app.screen.width;
-  const y = Math.random() * app.screen.height;
-  boids.push(new Boid(x, y));
+    const x = Math.random() * app.screen.width;
+    const y = Math.random() * app.screen.height;
+    boids.push(new Boid(x, y));
   }
 }
 

@@ -1,23 +1,191 @@
 {
   "frames": {
-    "policia.png": {
+    "00.png": {
       "frame": {
         "x": 0,
         "y": 0,
-        "w": 47,
-        "h": 79
+        "w": 9,
+        "h": 25
       },
       "rotated": false,
       "trimmed": true,
       "spriteSourceSize": {
-        "x": 2,
-        "y": 7,
-        "w": 47,
-        "h": 79
+        "x": 0,
+        "y": 0,
+        "w": 9,
+        "h": 25
       },
       "sourceSize": {
-        "w": 60,
-        "h": 90
+        "w": 10,
+        "h": 25
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "01.png": {
+      "frame": {
+        "x": 0,
+        "y": 25,
+        "w": 9,
+        "h": 25
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 9,
+        "h": 25
+      },
+      "sourceSize": {
+        "w": 10,
+        "h": 25
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "02.png": {
+      "frame": {
+        "x": 6,
+        "y": 174,
+        "w": 8,
+        "h": 24
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 1,
+        "w": 8,
+        "h": 24
+      },
+      "sourceSize": {
+        "w": 10,
+        "h": 25
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "03.png": {
+      "frame": {
+        "x": 9,
+        "y": 0,
+        "w": 8,
+        "h": 24
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 1,
+        "w": 8,
+        "h": 24
+      },
+      "sourceSize": {
+        "w": 10,
+        "h": 25
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "04.png": {
+      "frame": {
+        "x": 0,
+        "y": 50,
+        "w": 9,
+        "h": 25
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 9,
+        "h": 25
+      },
+      "sourceSize": {
+        "w": 10,
+        "h": 25
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "05.png": {
+      "frame": {
+        "x": 0,
+        "y": 75,
+        "w": 9,
+        "h": 25
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 9,
+        "h": 25
+      },
+      "sourceSize": {
+        "w": 10,
+        "h": 25
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "06.png": {
+      "frame": {
+        "x": 9,
+        "y": 24,
+        "w": 8,
+        "h": 24
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 8,
+        "h": 24
+      },
+      "sourceSize": {
+        "w": 10,
+        "h": 25
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "07.png": {
+      "frame": {
+        "x": 0,
+        "y": 150,
+        "w": 6,
+        "h": 25
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 6,
+        "h": 25
+      },
+      "sourceSize": {
+        "w": 10,
+        "h": 25
       },
       "pivot": {
         "x": 0.5,
@@ -25,14 +193,53 @@
       }
     }
   },
+  "animations": {
+    "idleAbajo": [
+      "00.png"
+    ],
+    "idleArriba": [
+      "01.png"
+    ],
+    "caminarDerecha": [
+      "02.png",
+      "03.png"
+    ],
+    "caminarAbajo": [
+      "00.png",
+      "01.png"
+    ],
+    "caminarArriba": [
+      "01.png"
+    ],
+    "caminarDiagonalNE": [
+      "02.png",
+      "03.png",
+      "04.png"
+    ],
+    "caminarDiagonalNO": [
+      "05.png",
+      "06.png",
+      "07.png"
+    ],
+    "caminarDiagonalSE": [
+      "05.png",
+      "06.png",
+      "07.png"
+    ],
+    "caminarDiagonalSO": [
+      "05.png",
+      "06.png",
+      "07.png"
+    ]
+  },
   "meta": {
     "app": "http://free-tex-packer.com",
     "version": "0.6.7",
     "image": "policia.png",
     "format": "RGBA8888",
     "size": {
-      "w": 47,
-      "h": 79
+      "w": 30,
+      "h": 75
     },
     "scale": 1
   }
