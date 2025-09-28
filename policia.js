@@ -1,19 +1,19 @@
-class Ciudadano extends Persona {
+class Policia extends Persona {
     constructor(texture, x, y, juego) {
-        super(texture, x, y, juego);
+      super(texture, x, y, juego);
     }
 
     tick() {
-        // Algoritmo boid con otros ciudadanos
-        BoidAlgorithm.separacion(this, this.juego.ciudadanos);
-        BoidAlgorithm.alineacion(this, this.juego.ciudadanos);
-        BoidAlgorithm.cohesion(this, this.juego.ciudadanos);
+        // Algoritmo boid con otros policías
+        BoidAlgorithm.separacion(this, this.juego.policias);
+        BoidAlgorithm.alineacion(this, this.juego.policias);
+        BoidAlgorithm.cohesion(this, this.juego.policias);
 
-        // Huir si ve al asesino
+        // Perseguir al asesino si lo ve
         if (this.juego.asesino) {
           const dist = calcularDistancia(this.posicion, this.juego.asesino.posicion);
           if (dist < this.vision) {
-            BoidAlgorithm.escapar(this, this.juego.asesino);
+            BoidAlgorithm.perseguir(this, this.juego.asesino);
           }
         }
 
@@ -25,9 +25,5 @@ class Ciudadano extends Persona {
         this.limitarVelocidad();
         this.posicion.x += this.velocidad.x * this.juego.pixiApp.ticker.deltaTime;
         this.posicion.y += this.velocidad.y * this.juego.pixiApp.ticker.deltaTime;
-    }
-
-    getOtrosCiudadanos() {
-        return this.juego.ciudadanos;
     }
 }

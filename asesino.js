@@ -1,5 +1,5 @@
 class Asesino extends Persona {
-    constructor() {
-        
+    constructor(texture, x, y, juego) {
+        super(texture, x, y, juego);
     }
 }

@@ -2,6 +2,7 @@ class Juego {
   pixiApp;
   ciudadanos = [];
   policias = [];
+  asesino = [];
   width;
   height;
 
@@ -15,44 +16,52 @@ class Juego {
 
   //async indica q este metodo es asyncronico, es decir q puede usar "await"
   async initPIXI() {
-    //creamos la aplicacion de pixi y la guardamos en la propiedad pixiApp
     this.pixiApp = new PIXI.Application();
     this.pixiApp.stage.name = "el stage";
-    //esto es para que funcione la extension de pixi
     globalThis.__PIXI_APP__ = this.pixiApp;
     const opcionesDePixi = {
       background : this.background,
       width: this.width,
       height: this.height,
       antialias: false,
-      SCALE_MODE: PIXI.SCALE_MODES.NEAREST,
+      scaleMode: 'nearest',
     };
-    //inicializamos pixi con las opciones definidas anteriormente
-    //await indica q el codigo se frena hasta que el metodo init de la app de pixi haya terminado
-    //puede tardar 2ms, 400ms.. no lo sabemos :O
     await this.pixiApp.init(opcionesDePixi);
-    // //agregamos el elementos canvas creado por pixi en el documento html
     document.body.appendChild(this.pixiApp.canvas);
-    //cargamos la imagen bunny.png y la guardamos en la variable texture
-    const texture = await PIXI.Assets.load("img/ciudadano.png");
-    const animacionesPersonaje1 = await PIXI.Assets.load("img/asesino.json");
+
+    // Carga los JSON de animaciones
+    const animacionesCiudadano = await PIXI.Assets.load("img/ciudadano.json");
+    const animacionesPolicia = await PIXI.Assets.load("img/policia.json");
+    const animacionesAsesino = await PIXI.Assets.load("img/asesino.json");
+
+    // Crea ciudadanos
     for (let i = 0; i < 100; i++) {
-      const x = 0.5 * this.width;
-      const y = 0.5 * this.height;
-      //crea una instancia de clase Conejito, el constructor de dicha clase toma como parametros la textura
-      // q queremos usar,X,Y y una referencia a la instancia del juego (this)
-      const conejito = new Ciudadano(animacionesPersonaje1, x, y, this);
-      this.ciudadanos.push(conejito);
+      const x = Math.random() * this.width;
+      const y = Math.random() * this.height;
+      const ciudadano = new Ciudadano(animacionesCiudadano, x, y, this);
+      this.ciudadanos.push(ciudadano);
     }
-    //agregamos el metodo this.gameLoop al ticker.
-    //es decir: en cada frame vamos a ejecutar el metodo this.gameLoop
+
+    // Crea policías
+    for (let i = 0; i < 10; i++) {
+      const x = Math.random() * this.width;
+      const y = Math.random() * this.height;
+      const policia = new Policia(animacionesPolicia, x, y, this);
+      this.policias.push(policia);
+    }
+
+  // Crea asesino (solo uno)
+    const x = 0.5 * this.width;
+    const y = 0.5 * this.height;
+    this.asesino = new Asesino(animacionesAsesino, x, y, this);
+
     this.pixiApp.ticker.add(this.gameLoop.bind(this));
     this.agregarInteractividadDelMouse();
     this.asignarPerseguidorRandomATodos();
     this.asignarTargets();
     this.asignarElMouseComoTargetATodosLosCiudadanos();
   }
-  
+
   agregarInteractividadDelMouse() {
     // Escuchar el evento mousemove
     this.pixiApp.canvas.onmousemove = (event) => {
@@ -61,11 +70,19 @@ class Juego {
   }
   
   gameLoop(time) {
-    //iteramos por todos los ciudadanos
-    for (let unCiudadano of this.ciudadanos) {
-      //ejecutamos el metodo tick de cada ciudadano
-      unCiudadano.tick();
-      unCiudadano.render();
+    // Actualiza ciudadanos
+    for (const ciudadano of this.ciudadanos) {
+      ciudadano.tick();
+    }
+
+    // Actualiza policías
+    for (const policia of this.policias) {
+      policia.tick();
+    }
+
+  // Actualiza asesino
+    if (this.asesino) {
+      this.asesino.tick();
     }
   }
   

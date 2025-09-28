@@ -1,159 +1,104 @@
-class Boid {
-    constructor(x, y) {
-        this.position = new Vector2D(x, y);
-        this.velocity = new Vector2D(
-            (Math.random() - 0.5) * 2,
-            (Math.random() - 0.5) * 2
-        );
-        this.acceleration = new Vector2D();
-        // Crear sprite triangular
-        this.sprite = new PIXI.Graphics();
-        this.updateSprite();
-        app.stage.addChild(this.sprite);
-    }
-
-    updateSprite() {
-        this.sprite.clear();
-        this.sprite.beginFill(0x00ff88);
-        this.sprite.drawPolygon([
-          0, -8,   // punta
-          -4, 6,   // base izquierda
-          4, 6     // base derecha
-        ]);
-        this.sprite.endFill();
-    }
-
-    update() {
-        // Aplicar las reglas de boids
-        const sep = this.separate();
-        const ali = this.align();
-        const coh = this.cohesion();
-        const edge = this.avoidEdges();
-
-        // Aplicar factores
-        sep.multiply(config.separationFactor);
-        ali.multiply(config.alignmentFactor);
-        coh.multiply(config.cohesionFactor);
-        edge.multiply(config.edgeAvoidance);
-        // Sumar fuerzas
-        this.acceleration.add(sep);
-        this.acceleration.add(ali);
-        this.acceleration.add(coh);
-        this.acceleration.add(edge);
-        // Limitar aceleración
-        this.acceleration.limit(config.maxForce);
-        // Actualizar velocidad y posición
-        this.velocity.add(this.acceleration);
-        this.velocity.limit(config.maxSpeed);
-        this.position.add(this.velocity);
-        // Wrap around edges
-        this.wrapEdges();
-        // Reset acceleration
-        this.acceleration.multiply(0);
-        // Actualizar sprite
-        this.sprite.x = this.position.x;
-        this.sprite.y = this.position.y;
-        this.sprite.rotation = Math.atan2(this.velocity.y, this.velocity.x) + Math.PI / 2;
-    }
-    
-    separate() {
-        const steer = new Vector2D();
-        let count = 0;
-
-        for (let other of boids) {
-            const distance = this.position.distance(other.position);
-            if (distance > 0 && distance < config.separationDistance) {
-                const diff = Vector2D.subtract(this.position, other.position);
-                diff.normalize();
-                diff.divide(distance); // Weight by distance
-                steer.add(diff);
-                count++;
-            }
+class BoidAlgorithm {
+  static separacion(objeto, vecinos, distanciaPersonal = 20, fuerza = 10) {
+    let promedio = { x: 0, y: 0 };
+    let contador = 0;
+    for (let vecino of vecinos) {
+      if (objeto !== vecino) {
+        const dist = calcularDistancia(objeto.posicion, vecino.posicion);
+        if (dist < distanciaPersonal) {
+          promedio.x += vecino.posicion.x;
+          promedio.y += vecino.posicion.y;
+          contador++;
         }
-        if (count > 0) {
-            steer.divide(count);
-            steer.normalize();
-            steer.multiply(config.maxSpeed);
-            steer.subtract(this.velocity);
-            steer.limit(config.maxForce);
-        }
-        return steer;
+      }
     }
+    if (contador === 0) return;
+    promedio.x /= contador;
+    promedio.y /= contador;
+    let alejamiento = {
+      x: objeto.posicion.x - promedio.x,
+      y: objeto.posicion.y - promedio.y,
+    };
+    alejamiento = limitarVector(alejamiento, 1);
+    objeto.aceleracion.x += alejamiento.x * fuerza;
+    objeto.aceleracion.y += alejamiento.y * fuerza;
+  }
+  static perseguir() {
+    if (!this.target) return;
+    const dist = calcularDistancia(this.posicion, this.target.posicion);
+    if (dist > this.vision) return;
 
-    align() {
-        const sum = new Vector2D();
-        let count = 0;
+    // Decaimiento exponencial: va de 1 a 0 a medida que se acerca
+    let factor = Math.pow(dist / this.distanciaParaLlegar, 3);
 
-        for (let other of boids) {
-            const distance = this.position.distance(other.position);
-            if (distance > 0 && distance < config.alignmentDistance) {
-                sum.add(other.velocity);
-                count++;
-            }
+    const difX = this.target.posicion.x - this.posicion.x;
+    const difY = this.target.posicion.y - this.posicion.y;
+
+    let vectorTemporal = {
+      x: -difX,
+      y: -difY,
+    };
+    vectorTemporal = limitarVector(vectorTemporal, 1);
+
+    this.aceleracion.x += -vectorTemporal.x * factor;
+    this.aceleracion.y += -vectorTemporal.y * factor;
+  }
+
+  static alineacion(objeto, vecinos, distanciaAlineacion = 50, fuerza = 1) {
+    let promedioVelocidad = { x: 0, y: 0 };
+    let contador = 0;
+    for (let vecino of vecinos) {
+      if (objeto !== vecino) {
+        const dist = calcularDistancia(objeto.posicion, vecino.posicion);
+        if (dist < distanciaAlineacion) {
+          promedioVelocidad.x += vecino.velocidad.x;
+          promedioVelocidad.y += vecino.velocidad.y;
+          contador++;
         }
-        if (count > 0) {
-            sum.divide(count);
-            sum.normalize();
-            sum.multiply(config.maxSpeed);
-            const steer = Vector2D.subtract(sum, this.velocity);
-            steer.limit(config.maxForce);
-            return steer;
+      }
+    }
+    if (contador === 0) return;
+    promedioVelocidad.x /= contador;
+    promedioVelocidad.y /= contador;
+    promedioVelocidad = limitarVector(promedioVelocidad, 1);
+    objeto.aceleracion.x += promedioVelocidad.x * fuerza;
+    objeto.aceleracion.y += promedioVelocidad.y * fuerza;
+  }
+
+  static escapar(objeto) {
+    if (!objeto.perseguidor) return;
+    const dist = calcularDistancia(objeto.posicion, objeto.perseguidor.posicion);
+    if (dist > objeto.vision) return;
+    const difX = objeto.perseguidor.posicion.x - objeto.posicion.x;
+    const difY = objeto.perseguidor.posicion.y - objeto.posicion.y;
+    let vectorTemporal = { x: -difX, y: -difY };
+    vectorTemporal = limitarVector(vectorTemporal, 1);
+    objeto.aceleracion.x += -vectorTemporal.x;
+    objeto.aceleracion.y += -vectorTemporal.y;
+  }
+
+  static cohesion(objeto, vecinos, distanciaCohesion = 100, fuerza = 0.5) {
+    let promedioPosicion = { x: 0, y: 0 };
+    let contador = 0;
+    for (let vecino of vecinos) {
+      if (objeto !== vecino) {
+        const dist = calcularDistancia(objeto.posicion, vecino.posicion);
+        if (dist < distanciaCohesion) {
+          promedioPosicion.x += vecino.posicion.x;
+          promedioPosicion.y += vecino.posicion.y;
+          contador++;
         }
-        return new Vector2D();
+      }
     }
-
-    cohesion() {
-        const sum = new Vector2D();
-        let count = 0;
-
-        for (let other of boids) {
-            const distance = this.position.distance(other.position);
-            if (distance > 0 && distance < config.cohesionDistance) {
-                sum.add(other.position);
-                count++;
-            }
-        }
-        if (count > 0) {
-            sum.divide(count);
-            return this.seek(sum);
-        }
-        return new Vector2D();
-    }
-
-    seek(target) {
-        const desired = Vector2D.subtract(target, this.position);
-        desired.normalize();
-        desired.multiply(config.maxSpeed);
-        const steer = Vector2D.subtract(desired, this.velocity);
-        steer.limit(config.maxForce);
-        return steer;
-    }
-
-    avoidEdges() {
-        const steer = new Vector2D();
-        const margin = 50;
-
-        if (this.position.x < margin) {
-            steer.x = config.maxSpeed;
-        } else if (this.position.x > app.screen.width - margin) {
-            steer.x = -config.maxSpeed;
-        }
-        if (this.position.y < margin) {
-            steer.y = config.maxSpeed;
-        } else if (this.position.y > app.screen.height - margin) {
-            steer.y = -config.maxSpeed;
-        }
-        return steer;
-    }
-
-    wrapEdges() {
-        if (this.position.x < -10) this.position.x = app.screen.width + 10;
-        if (this.position.x > app.screen.width + 10) this.position.x = -10;
-        if (this.position.y < -10) this.position.y = app.screen.height + 10;
-        if (this.position.y > app.screen.height + 10) this.position.y = -10;
-    }
-    
-    destroy() {
-        app.stage.removeChild(this.sprite);
-    }
+    if (contador === 0) return;
+    promedioPosicion.x /= contador;
+    promedioPosicion.y /= contador;
+    let acercamiento = {
+      x: promedioPosicion.x - objeto.posicion.x,
+      y: promedioPosicion.y - objeto.posicion.y,
+    };
+    acercamiento = limitarVector(acercamiento, 1);
+    objeto.aceleracion.x += acercamiento.x * fuerza;
+    objeto.aceleracion.y += acercamiento.y * fuerza;
+  }
 }
