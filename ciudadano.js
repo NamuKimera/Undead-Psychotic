@@ -1,33 +1,25 @@
 class Ciudadano extends Persona {
-    constructor(texture, x, y, juego) {
-        super(texture, x, y, juego);
+  constructor(texture, x, y, juego) {
+      super(texture, x, y, juego);
+  }
+
+  tick() {
+    super.tick();
+    // Algoritmo boid con otros ciudadanos
+    // Huir si ve al asesino
+    if (this.juego.asesino) {
+      const dist = calcularDistancia(this.posicion, this.juego.asesino.posicion);
+      this.huirDeAsesino(dist);
     }
+  }
 
-    tick() {
-        // Algoritmo boid con otros ciudadanos
-        BoidAlgorithm.separacion(this, this.juego.ciudadanos);
-        BoidAlgorithm.alineacion(this, this.juego.ciudadanos);
-        BoidAlgorithm.cohesion(this, this.juego.ciudadanos);
-
-        // Huir si ve al asesino
-        if (this.juego.asesino) {
-          const dist = calcularDistancia(this.posicion, this.juego.asesino.posicion);
-          if (dist < this.vision) {
-            BoidAlgorithm.escapar(this, this.juego.asesino);
-          }
-        }
-
-        this.limitarAceleracion();
-        this.velocidad.x += this.aceleracion.x * this.juego.pixiApp.ticker.deltaTime;
-        this.velocidad.y += this.aceleracion.y * this.juego.pixiApp.ticker.deltaTime;
-        this.rebotar();
-        this.aplicarFriccion();
-        this.limitarVelocidad();
-        this.posicion.x += this.velocidad.x * this.juego.pixiApp.ticker.deltaTime;
-        this.posicion.y += this.velocidad.y * this.juego.pixiApp.ticker.deltaTime;
+  huirDeAsesino(dist) {
+    if (dist < this.vision) {
+      BoidAlgorithm.escapar(this, this.juego.asesino);
     }
-
-    getOtrosCiudadanos() {
-        return this.juego.ciudadanos;
-    }
+  }
+  
+  getOtrosCiudadanos() {
+    return this.juego.ciudadanos;
+  }
 }

@@ -7,8 +7,8 @@ class Juego {
   height;
 
   constructor() {
-    this.width = 1280;
-    this.height = 720;
+    this.width = 1920;
+    this.height = 1080;
     this.background = "#102fbbff",
     this.mouse = { posicion: { x: 0, y: 0 } };
     this.initPIXI();
@@ -35,7 +35,7 @@ class Juego {
     const animacionesAsesino = await PIXI.Assets.load("img/asesino.json");
 
     // Crea ciudadanos
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 50; i++) {
       const x = Math.random() * this.width;
       const y = Math.random() * this.height;
       const ciudadano = new Ciudadano(animacionesCiudadano, x, y, this);
@@ -53,20 +53,14 @@ class Juego {
   // Crea asesino (solo uno)
     const x = 0.5 * this.width;
     const y = 0.5 * this.height;
-    this.asesino = new Asesino(animacionesAsesino, x, y, this);
+    const asesino = new Asesino(animacionesAsesino, x, y, this);
+    this.asesino.push(asesino);
 
     this.pixiApp.ticker.add(this.gameLoop.bind(this));
     this.agregarInteractividadDelMouse();
     this.asignarPerseguidorRandomATodos();
     this.asignarTargets();
     this.asignarElMouseComoTargetATodosLosCiudadanos();
-  }
-
-  agregarInteractividadDelMouse() {
-    // Escuchar el evento mousemove
-    this.pixiApp.canvas.onmousemove = (event) => {
-      this.mouse.posicion = { x: event.x, y: event.y };
-    };
   }
   
   gameLoop(time) {
@@ -98,6 +92,13 @@ class Juego {
     for (let cone of this.ciudadanos) {
       cone.asignarTarget(this.getCiudadanoRandom());
     }
+  }
+
+  agregarInteractividadDelMouse() {
+    // Escuchar el evento mousemove
+    this.pixiApp.canvas.onmousemove = (event) => {
+      this.mouse.posicion = { x: event.x, y: event.y };
+    };
   }
   
   asignarElMouseComoTargetATodosLosCiudadanos() {

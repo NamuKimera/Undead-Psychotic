@@ -33,7 +33,7 @@ class GameObject {
     this.cargarSpritesAnimados(textureData);
     this.cambiarAnimacion("caminarAbajo");
     // Opcional: referencia al sprite principal
-    this.sprite = this.spritesAnimados["caminarAbajo"];
+    this.sprite = this.spritesAnimados["idleAbajo"];
 
     // Agregar solo el container al stage
     this.juego.pixiApp.stage.addChild(this.container);
