@@ -6,8 +6,9 @@ class Juego {
   height;
 
   constructor() {
-    this.width = 1920;
-    this.height = 1080;
+    this.width = 1280;
+    this.height = 720;
+    this.background = "#102fbbff",
     this.mouse = { posicion: { x: 0, y: 0 } };
     this.initPIXI();
   }
@@ -20,7 +21,7 @@ class Juego {
     //esto es para que funcione la extension de pixi
     globalThis.__PIXI_APP__ = this.pixiApp;
     const opcionesDePixi = {
-      background: "#1099bb",
+      background : this.background,
       width: this.width,
       height: this.height,
       antialias: false,
