@@ -7,8 +7,8 @@ class Juego {
   height;
 
   constructor() {
-    this.width = 1920;
-    this.height = 1080;
+    this.width = 1280;
+    this.height = 720;
     this.background = "#102fbbff",
     this.mouse = { posicion: { x: 0, y: 0 } };
     this.initPIXI();
