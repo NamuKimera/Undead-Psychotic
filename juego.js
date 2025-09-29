@@ -17,14 +17,14 @@ class Juego {
   //async indica q este metodo es asyncronico, es decir q puede usar "await"
   async initPIXI() {
     this.pixiApp = new PIXI.Application();
-    this.pixiApp.stage.name = "el stage";
+    this.pixiApp.stage.name = "Undead Psychotic";
     globalThis.__PIXI_APP__ = this.pixiApp;
     const opcionesDePixi = {
       background : this.background,
       width: this.width,
       height: this.height,
       antialias: false,
-      scaleMode: 'nearest',
+      SCALE_MODE: PIXI.SCALE_MODES.NEAREST,
     };
     await this.pixiApp.init(opcionesDePixi);
     document.body.appendChild(this.pixiApp.canvas);
@@ -50,48 +50,15 @@ class Juego {
       this.policias.push(policia);
     }
 
-  // Crea asesino (solo uno)
+    // Crea asesino (solo uno)
     const x = 0.5 * this.width;
     const y = 0.5 * this.height;
     const asesino = new Asesino(animacionesAsesino, x, y, this);
     this.asesino.push(asesino);
 
     this.pixiApp.ticker.add(this.gameLoop.bind(this));
-    this.agregarInteractividadDelMouse();
-    this.asignarPerseguidorRandomATodos();
-    this.asignarTargets();
-    this.asignarElMouseComoTargetATodosLosCiudadanos();
-  }
-  
-  gameLoop(time) {
-    // Actualiza ciudadanos
-    for (const ciudadano of this.ciudadanos) {
-      ciudadano.tick();
-    }
 
-    // Actualiza policías
-    for (const policia of this.policias) {
-      policia.tick();
-    }
-
-  // Actualiza asesino
-    if (this.asesino) {
-      this.asesino.tick();
-    }
-  }
-  
-  getCiudadanoRandom() {
-    return this.ciudadanos[Math.floor(this.ciudadanos.length * Math.random())];
-  }
-  
-  getPoliciaRandom() {
-    return this.policias[Math.floor(this.policias.length * Math.random())];
-  }
-  
-  asignarTargets() {
-    for (let cone of this.ciudadanos) {
-      cone.asignarTarget(this.getCiudadanoRandom());
-    }
+    console.log("Juego inicializado");
   }
 
   agregarInteractividadDelMouse() {
@@ -100,28 +67,51 @@ class Juego {
       this.mouse.posicion = { x: event.x, y: event.y };
     };
   }
-  
-  asignarElMouseComoTargetATodosLosCiudadanos() {
-    for (let cone of this.ciudadanos) {
-      cone.asignarTarget(this.mouse);
-    }
+
+  getConejitoRandom() {
+    return this.conejitos[Math.floor(this.conejitos.length * Math.random())];
   }
-  
-  asignarElMouseComoTargetATodosLosPolicias() {
-    for (let cone of this.policias) {
-      cone.asignarTarget(this.mouse);
-    }
-  }
-  
-  asignarPerseguidorRandomATodos() {
-    for (let cone of this.ciudadanos) {
-      cone.perseguidor = this.getPoliciaRandom();
+
+  asignarTargets() {
+    for (let cone of this.conejitos) {
+      cone.asignarTarget(this.getConejitoRandom());
     }
   }
 
-  asignarElMouseComoPerseguidorATodosLosCiudadanos() {
-    for (let cone of this.ciudadanos) {
+  asignarElMouseComoTargetATodosLosConejitos() {
+    for (let cone of this.conejitos) {
+      cone.asignarTarget(this.mouse);
+    }
+  }
+
+  asignarPerseguidorRandomATodos() {
+    for (let cone of this.conejitos) {
+      cone.perseguidor = this.getConejitoRandom();
+    }
+  }
+  asignarElMouseComoPerseguidorATodosLosConejitos() {
+    for (let cone of this.conejitos) {
       cone.perseguidor = this.mouse;
+    }
+  }
+  
+  gameLoop(time) {
+    // Actualiza ciudadanos
+    for (const ciudadano of this.ciudadanos) {
+      ciudadano.tick();
+      ciudadano.render();
+    }
+
+    // Actualiza policías
+    for (const policia of this.policias) {
+      policia.tick();
+      policia.render();
+    }
+
+  // Actualiza asesino
+    for (const asesino of this.asesino) {
+      asesino.tick();
+      asesino.render();
     }
   }
 }

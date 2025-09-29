@@ -452,8 +452,6 @@
     ]
   },
   "meta": {
-    "app": "http://free-tex-packer.com",
-    "version": "0.6.7",
     "image": "asesino.png",
     "format": "RGBA8888",
     "size": {
