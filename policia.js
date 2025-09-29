@@ -6,4 +6,8 @@ class Policia extends Persona {
     tick() {
       super.tick();
   }
+
+  render() {
+    super.render();
+  }
 }

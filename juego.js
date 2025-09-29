@@ -68,10 +68,6 @@ class Juego {
     };
   }
 
-  getConejitoRandom() {
-    return this.conejitos[Math.floor(this.conejitos.length * Math.random())];
-  }
-
   asignarTargets() {
     for (let cone of this.conejitos) {
       cone.asignarTarget(this.getConejitoRandom());

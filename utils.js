@@ -18,7 +18,6 @@ function limitarVector(vector, magnitudMaxima) {
       y: vector.y * escala,
     };
   }
-
   // Si ya está dentro del límite, se devuelve igual
   return { ...vector };
 }

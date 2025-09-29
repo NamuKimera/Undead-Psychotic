@@ -7,4 +7,7 @@ class Persona extends GameObject {
     super.tick();
   }
 
+  render() {
+    super.render();
+  }
 }

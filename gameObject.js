@@ -15,14 +15,12 @@ class GameObject {
 
   constructor(textureData, x, y, juego) {
     this.container = new PIXI.Container();
-
     this.container.name = "container";
     this.vision = Math.random() * 200 + 1300;
     //guarda una referencia a la instancia del juego
     this.posicion = { x: x, y: y };
     this.velocidad = { x: Math.random() * 10, y: Math.random() * 10 };
     this.aceleracion = { x: 0, y: 0 };
-
     this.juego = juego;
     //generamos un ID para este conejito
     this.id = Math.floor(Math.random() * 99999999);
@@ -75,7 +73,6 @@ class GameObject {
       this.spritesAnimados[key].animationSpeed = 0.1;
       this.spritesAnimados[key].scale.set(2);
       this.spritesAnimados[key].anchor.set(0.5, 1);
-
       this.container.addChild(this.spritesAnimados[key]);
     }
   }
@@ -86,10 +83,7 @@ class GameObject {
 
     for (let persona of this.juego.asesino) {
       if (this != persona) {
-        if (
-          calcularDistancia(this.posicion, persona.posicion) <
-          this.distanciaPersonal
-        ) {
+        if (calcularDistancia(this.posicion, persona.posicion) < this.distanciaPersonal) {
           contador++;
           promedioDePosicionDeAquellosQEstanMuyCercaMio.x += persona.posicion.x;
           promedioDePosicionDeAquellosQEstanMuyCercaMio.y += persona.posicion.y;
@@ -219,7 +213,6 @@ class GameObject {
     this.aceleracion.y = 0;
 
     this.separacion();
-
     this.escapar();
     this.perseguir();
     this.limitarAceleracion();
