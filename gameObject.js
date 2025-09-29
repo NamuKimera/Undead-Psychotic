@@ -83,7 +83,7 @@ class GameObject {
 
     for (let persona of this.juego.asesino) {
       if (this != persona) {
-        if (calcularDistancia(this.posicion, persona.posicion) < this.distanciaPersonal) {
+        if (Vector2D.calcularDistancia(this.posicion, persona.posicion) < this.distanciaPersonal) {
           contador++;
           promedioDePosicionDeAquellosQEstanMuyCercaMio.x += persona.posicion.x;
           promedioDePosicionDeAquellosQEstanMuyCercaMio.y += persona.posicion.y;
@@ -131,11 +131,11 @@ class GameObject {
   }
 
   limitarAceleracion() {
-    this.aceleracion = limitarVector(this.aceleracion, this.aceleracionMaxima);
+    this.aceleracion = Vector2D.limitarVector(this.aceleracion, this.aceleracionMaxima);
   }
 
   limitarVelocidad() {
-    this.velocidad = limitarVector(this.velocidad, this.velocidadMaxima);
+    this.velocidad = Vector2D.limitarVector(this.velocidad, this.velocidadMaxima);
   }
 
   aplicarFriccion() {
@@ -165,7 +165,7 @@ class GameObject {
 
   perseguir() {
     if (!this.target) return;
-    const dist = calcularDistancia(this.posicion, this.target.posicion);
+    const dist = Vector2D.calcularDistancia(this.posicion, this.target.posicion);
     if (dist > this.vision) return;
 
     // Decaimiento exponencial: va de 1 a 0 a medida que se acerca
@@ -178,7 +178,7 @@ class GameObject {
       x: -difX,
       y: -difY,
     };
-    vectorTemporal = limitarVector(vectorTemporal, 1);
+    vectorTemporal = Vector2D.limitarVector(vectorTemporal, 1);
 
     this.aceleracion.x += -vectorTemporal.x * factor;
     this.aceleracion.y += -vectorTemporal.y * factor;
@@ -186,7 +186,7 @@ class GameObject {
 
   escapar() {
     if (!this.perseguidor) return;
-    const dist = calcularDistancia(this.posicion, this.perseguidor.posicion);
+    const dist = Vector2D.calcularDistancia(this.posicion, this.perseguidor.posicion);
     if (dist > this.vision) return;
 
     const difX = this.perseguidor.posicion.x - this.posicion.x;
@@ -196,7 +196,7 @@ class GameObject {
       x: -difX,
       y: -difY,
     };
-    vectorTemporal = limitarVector(vectorTemporal, 1);
+    vectorTemporal = Vector2D.limitarVector(vectorTemporal, 1);
 
     this.aceleracion.x += -vectorTemporal.x;
     this.aceleracion.y += -vectorTemporal.y;
@@ -224,19 +224,16 @@ class GameObject {
     //variaciones de la velocidad
     this.rebotar();
     this.aplicarFriccion();
-    this.limitarVelocidad();
+    Vector2D.limitarVelocidad();
 
     //pixeles por frame
     this.posicion.x += this.velocidad.x * this.juego.pixiApp.ticker.deltaTime;
     this.posicion.y += this.velocidad.y * this.juego.pixiApp.ticker.deltaTime;
 
     //guardamos el angulo
-    this.angulo =
-      radianesAGrados(Math.atan2(this.velocidad.y, this.velocidad.x)) + 180;
+    this.angulo = Vector2D.radianesAGrados(Math.atan2(this.velocidad.y, this.velocidad.x)) + 180;
 
-    this.velocidadLineal = Math.sqrt(
-      this.velocidad.x * this.velocidad.x + this.velocidad.y * this.velocidad.y
-    );
+    this.velocidadLineal = Math.sqrt(this.velocidad.x * this.velocidad.x + this.velocidad.y * this.velocidad.y);
   }
 
   render() {

@@ -63,6 +63,30 @@ class Vector2D {
     static subtract(v1, v2) {
         return new Vector2D(v1.x - v2.x, v1.y - v2.y);
     }
+
+    limitarVector(vector, magnitudMaxima) {
+        const magnitudActual = Math.sqrt(vector.x * vector.x + vector.y * vector.y);
+
+        if (magnitudActual > magnitudMaxima) {
+            const escala = magnitudMaxima / magnitudActual;
+            return {
+                x: vector.x * escala,
+                y: vector.y * escala,
+            };
+        }
+        // Si ya está dentro del límite, se devuelve igual
+        return { ...vector };
+    }
+
+    calcularDistancia(obj1, obj2) {
+        const dx = obj2.x - obj1.x;
+        const dy = obj2.y - obj1.y;
+        return Math.sqrt(dx * dx + dy * dy);
+    }
+    
+    radianesAGrados(radianes) {
+        return radianes * (180 / Math.PI);
+    }
 }
 
         
