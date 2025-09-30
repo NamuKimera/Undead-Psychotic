@@ -1,4 +1,9 @@
 class Boid {
+    boids = [];
+    isPaused = false;
+    frameCount = 0;
+    lastTime = performance.now();
+
     constructor(x, y) {
         this.position = new Vector2D(x, y);
         this.velocity = new Vector2D(
@@ -12,6 +17,11 @@ class Boid {
         this.updateSprite();
 
         app.stage.addChild(this.sprite);
+    }
+
+    configuracion(){
+        const config = {boidCount: 150, maxSpeed: 2.5, maxForce: 0.1, visionRange: 50, separationDistance: 25, alignmentDistance: 40, cohesionDistance: 45, separationFactor: 1.5, alignmentFactor: 1.0, cohesionFactor: 1.0, edgeAvoidance: 0.5};
+        return config;
     }
 
     updateSprite() {
@@ -70,13 +80,7 @@ class Boid {
 
         for (let other of boids) {
             const distance = this.position.distance(other.position);
-            if (distance > 0 && distance < config.separationDistance) {
-                const diff = Vector2D.subtract(this.position, other.position);
-                diff.normalize();
-                diff.divide(distance); // Weight by distance
-                steer.add(diff);
-                count++;
-            }
+            this.subseparate1(distance);
         }
 
         if (count > 0) {
@@ -90,16 +94,23 @@ class Boid {
         return steer;
     }
 
+    subseparate1(distance){
+        if (distance > 0 && distance < config.separationDistance) {
+            const diff = Vector2D.subtract(this.position, other.position);
+            diff.normalize();
+            diff.divide(distance); // Weight by distance
+            steer.add(diff);
+            count++;
+        }
+    }
+
     align() {
-        const sum = new Vector2D();
+        const sum = new Vector2D(0,0);
         let count = 0;
 
         for (let other of boids) {
             const distance = this.position.distance(other.position);
-            if (distance > 0 && distance < config.alignmentDistance) {
-                sum.add(other.velocity);
-                count++;
-            }
+            this.subalign1(distance);
         }
 
         if (count > 0) {
@@ -111,27 +122,36 @@ class Boid {
             return steer;
         }
 
-        return new Vector2D();
+        return new Vector2D(0,0);
+    }
+
+    subalign1(distance){
+        if (distance > 0 && distance < config.alignmentDistance) {
+            sum.add(other.velocity);
+            count++;
+        }
     }
 
     cohesion() {
-        const sum = new Vector2D();
+        const sum = new Vector2D(0,0);
         let count = 0;
 
         for (let other of boids) {
             const distance = this.position.distance(other.position);
-            if (distance > 0 && distance < config.cohesionDistance) {
-                sum.add(other.position);
-                count++;
-            }
+            this.subcohesion1(distance);
         }
-
         if (count > 0) {
             sum.divide(count);
             return this.seek(sum);
         }
+        return new Vector2D(0,0);
+    }
 
-        return new Vector2D();
+    subcohesion1(distance){
+        if (distance > 0 && distance < config.cohesionDistance) {
+            sum.add(other.position);
+            count++;
+        }
     }
 
     seek(target) {
@@ -145,7 +165,7 @@ class Boid {
     }
 
     avoidEdges() {
-        const steer = new Vector2D();
+        const steer = new Vector2D(0,0);
         const margin = 50;
 
         if (this.position.x < margin) {
@@ -153,13 +173,11 @@ class Boid {
         } else if (this.position.x > app.screen.width - margin) {
             steer.x = -config.maxSpeed;
         }
-
         if (this.position.y < margin) {
             steer.y = config.maxSpeed;
         } else if (this.position.y > app.screen.height - margin) {
             steer.y = -config.maxSpeed;
         }
-
         return steer;
     }
 
@@ -172,5 +190,79 @@ class Boid {
 
     destroy() {
         app.stage.removeChild(this.sprite);
+    }
+
+    
+    // Inicializar boids
+    initBoids() {
+        // Limpiar boids existentes
+        boids.forEach(boid => boid.destroy());
+        boids = [];
+
+        // Crear nuevos boids
+        for (let i = 0; i < config.boidCount; i++) {
+            const x = Math.random() * app.screen.width;
+            const y = Math.random() * app.screen.height;
+            boids.push(new Boid(x, y));
+        }   
+    }
+
+    // Setup controles
+    setupControls() {
+        const controls = { boidCount: ['boidCountSlider', 'boidCount', (v) => parseInt(v)], maxSpeed: ['maxSpeedSlider', 'maxSpeed', (v) => parseFloat(v)], maxForce: ['maxForceSlider', 'maxForce', (v) => parseFloat(v)], visionRange: ['visionRangeSlider', 'visionRange', (v) => parseInt(v)], separationDistance: ['separationDistanceSlider', 'separationDistance', (v) => parseInt(v)], alignmentDistance: ['alignmentDistanceSlider', 'alignmentDistance', (v) => parseInt(v)], cohesionDistance: ['cohesionDistanceSlider', 'cohesionDistance', (v) => parseInt(v)], separationFactor: ['separationFactorSlider', 'separationFactor', (v) => parseFloat(v)], alignmentFactor: ['alignmentFactorSlider', 'alignmentFactor', (v) => parseFloat(v)], cohesionFactor: ['cohesionFactorSlider', 'cohesionFactor', (v) => parseFloat(v)], edgeAvoidance: ['edgeAvoidanceSlider', 'edgeAvoidance', (v) => parseFloat(v)]};
+
+        Object.keys(controls).forEach(key => {
+            const [sliderId, displayId, parser] = controls[key];
+            const slider = document.getElementById(sliderId);
+            const display = document.getElementById(displayId);
+
+            slider.addEventListener('input', (e) => {
+                const value = parser(e.target.value);
+                config[key] = value;
+                display.textContent = value;
+
+                // Si cambió el número de boids, reinicializar
+                if (key === 'boidCount') {
+                    initBoids();
+                }
+            });
+        });
+    }
+
+    // Función de animación
+    animate() {
+        if (!isPaused) {
+            // Actualizar cada boid
+            boids.forEach(boid => boid.update());
+
+            // Calcular FPS
+            frameCount++;
+            const currentTime = performance.now();
+            this.subTime(currentTime);
+            
+        // Actualizar stats
+            document.getElementById('activeBoids').textContent = boids.length;
+        }
+
+        requestAnimationFrame(animate);
+    }
+
+
+    subTime(currentTime){
+        if (currentTime - lastTime >= 1000) {
+            document.getElementById('fps').textContent = frameCount;
+            frameCount = 0;
+            lastTime = currentTime;
+        }
+    }
+
+    // Funciones de control
+    resetBoids() {
+        initBoids();
+    }
+
+    togglePause() {
+        isPaused = !isPaused;
+        document.getElementById('pauseBtn').textContent = isPaused ? 'Reanudar' : 'Pausar';
     }
 }

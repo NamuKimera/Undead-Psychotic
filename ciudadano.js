@@ -1,13 +1,9 @@
-class Ciudadano extends Persona {
+class Ciudadano extends GameObject {
   constructor(texture, x, y, juego) {
-      super(texture, x, y, juego);
+    super(texture, x, y, juego);
   }
 
-  tick() {
-    super.tick();
-  }
-
-  render() {
-    super.render();
+  getOtrosCiudadanos() {
+    return this.juego.conejitos;
   }
 }

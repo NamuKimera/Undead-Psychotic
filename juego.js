@@ -60,36 +60,6 @@ class Juego {
 
     console.log("Juego inicializado");
   }
-
-  agregarInteractividadDelMouse() {
-    // Escuchar el evento mousemove
-    this.pixiApp.canvas.onmousemove = (event) => {
-      this.mouse.posicion = { x: event.x, y: event.y };
-    };
-  }
-
-  asignarTargets() {
-    for (let cone of this.conejitos) {
-      cone.asignarTarget(this.getConejitoRandom());
-    }
-  }
-
-  asignarElMouseComoTargetATodosLosConejitos() {
-    for (let cone of this.conejitos) {
-      cone.asignarTarget(this.mouse);
-    }
-  }
-
-  asignarPerseguidorRandomATodos() {
-    for (let cone of this.conejitos) {
-      cone.perseguidor = this.getConejitoRandom();
-    }
-  }
-  asignarElMouseComoPerseguidorATodosLosConejitos() {
-    for (let cone of this.conejitos) {
-      cone.perseguidor = this.mouse;
-    }
-  }
   
   gameLoop(time) {
     // Actualiza ciudadanos
