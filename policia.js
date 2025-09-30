@@ -1,13 +1,9 @@
 class Policia extends Persona {
-    constructor(texture, x, y, juego) {
-      super(texture, x, y, juego);
-    }
-
-    tick() {
-      super.tick();
+  constructor(texture, x, y, juego) {
+    super(texture, x, y, juego);
   }
 
-  render() {
-    super.render();
+  tick() {
+    super.tick();
   }
 }

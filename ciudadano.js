@@ -5,7 +5,9 @@ class Ciudadano extends Persona {
 
   tick() {
     super.tick();
-    // Algoritmo boid con otros ciudadanos
-    // Huir si ve al asesino
+  }
+
+  render() {
+    super.render();
   }
 }
