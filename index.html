@@ -40,18 +40,31 @@
                     this.position = createVector(x, y);
                     this.velocity = createVector(0, 0);
                     this.acceleration = createVector(0, 0);
-                    
+                }
+                evade(vehicle){
+                let pursuit = this.pursue(vehicle);
+                pursuit.mult(-1);
+                return pursuit;
                 }
                 pursue(vehicle){
                 let target = vehicle.pos.copy();
+                let prediction = vehicle.velocity.copy();
+                prediction.mult(10);
+                target.add(velocity);
                 target.add(vehicle.velocity.mult(10));
                 fill(0, 255, 0);
                 circle(target.x, target.y, 16);
                 retun this.seek(target);
                 }
+                
+                arrive(target){
+                return this.seek(target.true);
+                }
+                
                 flee(target){
                 return this.seek(target).mult(-1);
                 }
+                
                 seek(target){
                     let desired = p5.Vector.sub(target, this.position);
                     let steering = p5.Vector.sub(desired, this.velocity);
