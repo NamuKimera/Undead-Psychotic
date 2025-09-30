@@ -132,7 +132,7 @@ class GameObject {
 
     for (let persona of this.juego.asesino) {
       if (this != persona) {
-        this.subseparacion1();
+        this.subseparacion1(persona);
       }
     }
 
@@ -157,7 +157,7 @@ class GameObject {
     this.aceleracion.y += vectorQueSeAlejaDelPromedioDePosicion.y * factor;
   }
 
-  subseparacion1(){
+  subseparacion1(persona){
     if (calcularDistancia(this.posicion, persona.posicion) < this.distanciaPersonal) {
       contador++;
       promedioDePosicionDeAquellosQEstanMuyCercaMio.x += persona.posicion.x;
@@ -221,14 +221,17 @@ class GameObject {
   }
 
   tick() {
+    //TODO: hablar de deltatime
     this.aceleracion.x = 0;
     this.aceleracion.y = 0;
+
+    this.separacion();
 
     this.escapar();
     this.perseguir();
     this.limitarAceleracion();
-    this.velocidad.x += this.aceleracion.x;
-    this.velocidad.y += this.aceleracion.y;
+    this.velocidad.x += this.aceleracion.x * this.juego.pixiApp.ticker.deltaTime;
+    this.velocidad.y += this.aceleracion.y * this.juego.pixiApp.ticker.deltaTime;
 
     //variaciones de la velocidad
     this.rebotar();
@@ -236,13 +239,13 @@ class GameObject {
     this.limitarVelocidad();
 
     //pixeles por frame
-    this.posicion.x += this.velocidad.x;
-    this.posicion.y += this.velocidad.y;
+    this.posicion.x += this.velocidad.x * this.juego.pixiApp.ticker.deltaTime;
+    this.posicion.y += this.velocidad.y * this.juego.pixiApp.ticker.deltaTime;
 
     //guardamos el angulo
-    this.angulo = radianesAGrados(
-      Math.atan2(this.velocidad.y, this.velocidad.x)
-    );
+    this.angulo = radianesAGrados(Math.atan2(this.velocidad.y, this.velocidad.x)) + 180;
+
+    this.velocidadLineal = Math.sqrt(this.velocidad.x * this.velocidad.x + this.velocidad.y * this.velocidad.y);
   }
 
   render() {
