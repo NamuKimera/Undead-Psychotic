@@ -15,7 +15,7 @@ class Asesino extends GameObject {
         this.cambiarAnimacion("caminarAbajo"); // O la animación inicial que desees
         this.container.x = x; // Posición inicial
         this.container.y = y;
-        this.container.scale.set(2); // Escala el contenedor
+        this.container.scale.set(1.3); // Escala el contenedor
 
         // Agrega los listeners de teclado
         this.setupKeyboardListeners();
@@ -27,7 +27,7 @@ class Asesino extends GameObject {
     setupKeyboardListeners() {
         window.addEventListener('keydown', (e) => {
             if (e.key in this.keys) {
-                this.keys[e.key] = true;
+                this.keys[e.key] = false;
             }
         });
         window.addEventListener('keyup', (e) => {
