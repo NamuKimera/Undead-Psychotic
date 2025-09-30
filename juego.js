@@ -34,15 +34,13 @@ class Juego {
     const animacionesPolicia = await PIXI.Assets.load("img/policia.json");
     const animacionesAsesino = await PIXI.Assets.load("img/asesino.json");
 
-    // Crea ciudadanos
+    // Crea ciudadanos y policias
     for (let i = 0; i < 50; i++) {
       const x = Math.random() * this.width;
       const y = Math.random() * this.height;
       const ciudadano = new Ciudadano(animacionesCiudadano, x, y, this);
       this.ciudadanos.push(ciudadano);
     }
-
-    // Crea policías
     for (let i = 0; i < 10; i++) {
       const x = Math.random() * this.width;
       const y = Math.random() * this.height;
@@ -55,10 +53,7 @@ class Juego {
     const y = 0.5 * this.height;
     const asesino = new Asesino(animacionesAsesino, x, y, this);
     this.asesino.push(asesino);
-
     this.pixiApp.ticker.add(this.gameLoop.bind(this));
-
-    console.log("Juego inicializado");
   }
   
   gameLoop(time) {

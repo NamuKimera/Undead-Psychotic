@@ -6,7 +6,7 @@ class GameObject {
   y = 0;
   target;
   perseguidor;
-  aceleracionMaxima = 0.2;
+  aceleracionMaxima = 1;
   velocidadMaxima = 3;
   spritesAnimados = {};
   radio = 10;
@@ -42,13 +42,11 @@ class GameObject {
   cargarSpritesAnimados(textureData) {
     for (let key of Object.keys(textureData.animations)) {
       this.spritesAnimados[key] = new PIXI.AnimatedSprite(textureData.animations[key]);
-
       this.spritesAnimados[key].play();
       this.spritesAnimados[key].loop = true;
       this.spritesAnimados[key].animationSpeed = 0.1;
       this.spritesAnimados[key].scale.set(2);
       this.spritesAnimados[key].anchor.set(0.5, 1);
-
       this.container.addChild(this.spritesAnimados[key]);
     }
   }
@@ -70,8 +68,7 @@ class GameObject {
   cambiarVelocidadDeAnimacionSegunVelocidadLineal() {
     const keys = Object.keys(this.spritesAnimados);
     for (let key of keys) {
-      this.spritesAnimados[key].animationSpeed =
-        this.velocidadLineal * 0.05 * this.juego.pixiApp.ticker.deltaTime;
+      this.spritesAnimados[key].animationSpeed = this.velocidadLineal * 0.05 * this.juego.pixiApp.ticker.deltaTime;
     }
   }
 
@@ -92,10 +89,6 @@ class GameObject {
   rebotar() {
     //ejemplo mas realista
     if (this.posicion.x > this.juego.width || this.posicion.x < 0) {
-      //si la coordenada X de este conejito es mayor al ancho del stage,
-      //o si la coordenada X.. es menor q 0 (o sea q se fue por el lado izquierdo)
-      //multiplicamos por -0.99, o sea que se invierte el signo (si era positivo se hace negativo y vicecversa)
-      //y al ser 0.99 pierde 1% de velocidad
       this.velocidad.x *= -0.99;
     }
 
@@ -131,9 +124,7 @@ class GameObject {
     let contador = 0;
 
     for (let persona of this.juego.asesino) {
-      if (this != persona) {
-        this.subseparacion1(persona);
-      }
+      this.subseparacion2(persona);
     }
 
     if (contador == 0) return;
@@ -158,10 +149,17 @@ class GameObject {
   }
 
   subseparacion1(persona){
+    let contador = 0;
     if (calcularDistancia(this.posicion, persona.posicion) < this.distanciaPersonal) {
       contador++;
       promedioDePosicionDeAquellosQEstanMuyCercaMio.x += persona.posicion.x;
       promedioDePosicionDeAquellosQEstanMuyCercaMio.y += persona.posicion.y;
+    }
+  }
+
+  subseparacion2(persona){
+    if (this != persona) {
+      this.subseparacion1(persona);
     }
   }
 
