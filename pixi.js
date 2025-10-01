@@ -7,7 +7,6 @@
  */
 var PIXI = (function (exports) {
     'use strict';
-
     "use strict";
     var __defProp$1e = Object.defineProperty;
     var __defProps$s = Object.defineProperties;
@@ -297,21 +296,16 @@ var PIXI = (function (exports) {
         }
       }
     };
-
     var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
-
     function getDefaultExportFromCjs (x) {
     	return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default') ? x['default'] : x;
     }
-
     function getDefaultExportFromNamespaceIfPresent (n) {
     	return n && Object.prototype.hasOwnProperty.call(n, 'default') ? n['default'] : n;
     }
-
     function getDefaultExportFromNamespaceIfNotNamed (n) {
     	return n && Object.prototype.hasOwnProperty.call(n, 'default') && Object.keys(n).length === 1 ? n['default'] : n;
     }
-
     function getAugmentedNamespace(n) {
       if (n.__esModule) return n;
       var f = n.default;
@@ -336,14 +330,10 @@ var PIXI = (function (exports) {
     	});
     	return a;
     }
-
     var eventemitter3$1 = {exports: {}};
-
     var eventemitter3 = eventemitter3$1.exports;
-
     (function (module) {
     	'use strict';
-
     	var has = Object.prototype.hasOwnProperty
     	  , prefix = '~';
 
@@ -355,7 +345,6 @@ var PIXI = (function (exports) {
     	 * @private
     	 */
     	function Events() {}
-
     	//
     	// We try to not inherit from `Object.prototype`. In some engines creating an
     	// instance in this way is faster than calling `Object.create(null)` directly.
@@ -365,14 +354,12 @@ var PIXI = (function (exports) {
     	//
     	if (Object.create) {
     	  Events.prototype = Object.create(null);
-
     	  //
     	  // This hack is needed because the `__proto__` property is still inherited in
     	  // some old browsers like Android 4, iPhone 5.1, Opera 11 and Safari 5.
     	  //
     	  if (!new Events().__proto__) prefix = false;
     	}
-
     	/**
     	 * Representation of a single event listener.
     	 *
@@ -53602,7 +53589,6 @@ ${e}`);
       roundPixels: false
     };
     let ParticleContainer = _ParticleContainer;
-
     "use strict";
     var __defProp$3 = Object.defineProperty;
     var __getOwnPropSymbols$4 = Object.getOwnPropertySymbols;
@@ -54051,7 +54037,6 @@ ${e}`);
         super(options);
       }
     }
-
     "use strict";
     function bitmapTextSplit(options) {
       const { text, style, chars: existingChars } = options;
@@ -54115,7 +54100,6 @@ ${e}`);
       }
       return { chars, lines, words };
     }
-
     "use strict";
     var __getOwnPropSymbols$3 = Object.getOwnPropertySymbols;
     var __hasOwnProp$3 = Object.prototype.hasOwnProperty;
@@ -54390,7 +54374,6 @@ ${e}`);
         this._originalText = "";
       }
     }
-
     "use strict";
     var __defProp$2 = Object.defineProperty;
     var __defProps$2 = Object.defineProperties;
@@ -54478,7 +54461,6 @@ ${e}`);
       // Top-left alignment
     };
     let SplitBitmapText = _SplitBitmapText;
-
     "use strict";
     function getAlignmentOffset(alignment, lineWidth, largestLine) {
       switch (alignment) {
@@ -54593,7 +54575,6 @@ ${e}`);
       });
       return { chars, lines: lineContainers, words: wordContainers };
     }
-
     "use strict";
     var __defProp$1 = Object.defineProperty;
     var __defProps$1 = Object.defineProperties;
@@ -54683,7 +54664,6 @@ ${e}`);
     let SplitText = _SplitText;
 
     "use strict";
-
     "use strict";
     const valuesToIterateForKeys = [
       "align",
@@ -54757,11 +54737,8 @@ ${e}`);
     }
 
     "use strict";
-
     "use strict";
-
     "use strict";
-
     "use strict";
     async function logDebugTexture(texture, renderer, size = 200) {
       const base64 = await renderer.extract.base64(texture);
@@ -54861,11 +54838,8 @@ ${e}`);
     }
 
     "use strict";
-
     "use strict";
-
     "use strict";
-
     exports.AbstractBitmapFont = AbstractBitmapFont;
     exports.AbstractRenderer = AbstractRenderer;
     exports.AbstractSplitText = AbstractSplitText;
