@@ -1,6 +1,6 @@
 {
   "frames": {
-    "00.png": {
+    "c00.png": {
       "frame": {
         "x": 0,
         "y": 0,
@@ -24,7 +24,7 @@
         "y": 0.5
       }
     },
-    "01.png": {
+    "c01.png": {
       "frame": {
         "x": 0,
         "y": 25,
@@ -48,7 +48,7 @@
         "y": 0.5
       }
     },
-    "02.png": {
+    "c02.png": {
       "frame": {
         "x": 6,
         "y": 174,
@@ -72,7 +72,7 @@
         "y": 0.5
       }
     },
-    "03.png": {
+    "c03.png": {
       "frame": {
         "x": 9,
         "y": 0,
@@ -96,7 +96,7 @@
         "y": 0.5
       }
     },
-    "04.png": {
+    "c04.png": {
       "frame": {
         "x": 0,
         "y": 50,
@@ -120,7 +120,7 @@
         "y": 0.5
       }
     },
-    "05.png": {
+    "c05.png": {
       "frame": {
         "x": 0,
         "y": 75,
@@ -144,7 +144,7 @@
         "y": 0.5
       }
     },
-    "06.png": {
+    "c06.png": {
       "frame": {
         "x": 9,
         "y": 24,
@@ -168,7 +168,7 @@
         "y": 0.5
       }
     },
-    "07.png": {
+    "c07.png": {
       "frame": {
         "x": 0,
         "y": 150,
@@ -195,41 +195,41 @@
   },
   "animations": {
     "idleAbajo": [
-      "00.png"
+      "c00.png"
     ],
     "idleArriba": [
-      "01.png"
+      "c01.png"
     ],
     "caminarDerecha": [
-      "02.png",
-      "03.png"
+      "c02.png",
+      "c03.png"
     ],
     "caminarAbajo": [
-      "00.png",
-      "01.png"
+      "c00.png",
+      "c01.png"
     ],
     "caminarArriba": [
-      "01.png"
+      "c01.png"
     ],
     "caminarDiagonalNE": [
-      "02.png",
-      "03.png",
-      "04.png"
+      "c02.png",
+      "c03.png",
+      "c04.png"
     ],
     "caminarDiagonalNO": [
-      "05.png",
-      "06.png",
-      "07.png"
+      "c05.png",
+      "c06.png",
+      "c07.png"
     ],
     "caminarDiagonalSE": [
-      "05.png",
-      "06.png",
-      "07.png"
+      "c05.png",
+      "c06.png",
+      "c07.png"
     ],
     "caminarDiagonalSO": [
-      "05.png",
-      "06.png",
-      "07.png"
+      "c05.png",
+      "c06.png",
+      "c07.png"
     ]
   },
   "meta": {
