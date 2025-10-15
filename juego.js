@@ -233,7 +233,6 @@ class Juego {
   async cargarTexturas() {
     await PIXI.Assets.load([
       "assets/bg.jpg",
-      "assets/pixelart/target.png",
       "assets/pixelart/globo_de_dialogo.png",
     ]);
   }
