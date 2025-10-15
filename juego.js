@@ -168,7 +168,7 @@ class Juego {
 
     // this.crearArboles();
     // this.crearCasitasRandom();
-    this.crearProtagonista();
+    this.crearAsesino();
     this.targetCamara = this.protagonista;
     // this.crearEnemigos(200, 2);
     // this.crearEnemigos(40, 3);
@@ -233,6 +233,7 @@ class Juego {
   async cargarTexturas() {
     await PIXI.Assets.load([
       "assets/bg.jpg",
+      "assets/pixelart/target.png",
       "assets/pixelart/globo_de_dialogo.png",
     ]);
   }
@@ -305,10 +306,10 @@ class Juego {
       this.crearUnAmigo(x, y);
     }
   }
-  crearProtagonista() {
+  crearAsesino() {
     const x = 3500;
     const y = 1500;
-    const protagonista = new Protagonista(x, y, this);
+    const protagonista = new Asesino(x, y, this);
     this.personas.push(protagonista);
     this.protagonista = protagonista;
   }
@@ -383,6 +384,7 @@ class Juego {
       { passive: false }
     );
   }
+
   ponerCruzTargetDondeElMouseHizoClick(posicion) {
     this.cruzTarget.x = posicion.x;
     this.cruzTarget.y = posicion.y;
@@ -458,6 +460,7 @@ class Juego {
         }
       });
   }
+
   calcularFPS() {
     this.deltaTime = performance.now() - this.ahora;
     this.ahora = performance.now();
@@ -480,6 +483,7 @@ class Juego {
       }
     });
   }
+  
   toggleDebug() {
     this.debug = !this.debug;
   }
