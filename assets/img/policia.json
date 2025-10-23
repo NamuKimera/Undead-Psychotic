@@ -4,15 +4,15 @@
       "frame": {
         "x": 0,
         "y": 0,
-        "w": 9,
+        "w": 10,
         "h": 25
       },
       "rotated": false,
-      "trimmed": true,
+      "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 9,
+        "w": 10,
         "h": 25
       },
       "sourceSize": {
@@ -28,15 +28,15 @@
       "frame": {
         "x": 0,
         "y": 25,
-        "w": 9,
+        "w": 10,
         "h": 25
       },
       "rotated": false,
-      "trimmed": true,
+      "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 9,
+        "w": 10,
         "h": 25
       },
       "sourceSize": {
@@ -50,18 +50,18 @@
     },
     "p02.png": {
       "frame": {
-        "x": 6,
-        "y": 174,
-        "w": 8,
-        "h": 24
+        "x": 0,
+        "y": 50,
+        "w": 10,
+        "h": 25
       },
       "rotated": false,
-      "trimmed": true,
+      "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
-        "y": 1,
-        "w": 8,
-        "h": 24
+        "y": 0,
+        "w": 10,
+        "h": 25
       },
       "sourceSize": {
         "w": 10,
@@ -74,18 +74,18 @@
     },
     "p03.png": {
       "frame": {
-        "x": 9,
-        "y": 0,
-        "w": 8,
-        "h": 24
+        "x": 0,
+        "y": 75,
+        "w": 10,
+        "h": 25
       },
       "rotated": false,
-      "trimmed": true,
+      "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
-        "y": 1,
-        "w": 8,
-        "h": 24
+        "y": 0,
+        "w": 10,
+        "h": 25
       },
       "sourceSize": {
         "w": 10,
@@ -99,16 +99,16 @@
     "p04.png": {
       "frame": {
         "x": 0,
-        "y": 50,
-        "w": 9,
+        "y": 100,
+        "w": 10,
         "h": 25
       },
       "rotated": false,
-      "trimmed": true,
+      "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 9,
+        "w": 10,
         "h": 25
       },
       "sourceSize": {
@@ -123,16 +123,16 @@
     "p05.png": {
       "frame": {
         "x": 0,
-        "y": 75,
-        "w": 9,
+        "y": 125,
+        "w": 10,
         "h": 25
       },
       "rotated": false,
-      "trimmed": true,
+      "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 9,
+        "w": 10,
         "h": 25
       },
       "sourceSize": {
@@ -146,18 +146,18 @@
     },
     "p06.png": {
       "frame": {
-        "x": 9,
-        "y": 24,
-        "w": 8,
-        "h": 24
+        "x": 0,
+        "y": 150,
+        "w": 10,
+        "h": 25
       },
       "rotated": false,
-      "trimmed": true,
+      "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 8,
-        "h": 24
+        "w": 10,
+        "h": 25
       },
       "sourceSize": {
         "w": 10,
@@ -171,16 +171,16 @@
     "p07.png": {
       "frame": {
         "x": 0,
-        "y": 150,
-        "w": 6,
+        "y": 175,
+        "w": 10,
         "h": 25
       },
       "rotated": false,
-      "trimmed": true,
+      "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 6,
+        "w": 10,
         "h": 25
       },
       "sourceSize": {
@@ -193,52 +193,15 @@
       }
     }
   },
-  "animations": {
-    "idleAbajo": [
-      "p00.png"
-    ],
-    "idleArriba": [
-      "p01.png"
-    ],
-    "caminarDerecha": [
-      "p02.png",
-      "p03.png"
-    ],
-    "caminarAbajo": [
-      "p00.png",
-      "p01.png"
-    ],
-    "caminarArriba": [
-      "p01.png"
-    ],
-    "caminarDiagonalNE": [
-      "p02.png",
-      "p03.png",
-      "p04.png"
-    ],
-    "caminarDiagonalNO": [
-      "p05.png",
-      "p06.png",
-      "p07.png"
-    ],
-    "caminarDiagonalSE": [
-      "p05.png",
-      "p06.png",
-      "p07.png"
-    ],
-    "caminarDiagonalSO": [
-      "p05.png",
-      "p06.png",
-      "p07.png"
-    ]
-  },
   "meta": {
+    "app": "http://free-tex-packer.com",
+    "version": "0.6.7",
     "image": "policia.png",
     "format": "RGBA8888",
     "size": {
-      "w": 30,
-      "h": 75
+      "w": 10,
+      "h": 200
     },
-    "scale": 1
+    "scale": 6
   }
 }

@@ -10,9 +10,7 @@ const Z_INDEX = {
 class Juego {
   pixiApp;
   personas = [];
-  amigos = [];
-  enemigos = [];
-  civiles = [];
+  ciudadanos = [];
   policias = [];
   faroles = [];
   monumentos = [];
@@ -20,7 +18,7 @@ class Juego {
   arboles = [];
   autos = [];
   objetosInanimados = [];
-  protagonista;
+  asesino;
   width;
   height;
   debug = false;
@@ -169,7 +167,9 @@ class Juego {
     // this.crearArboles();
     // this.crearCasitasRandom();
     this.crearAsesino();
-    this.targetCamara = this.protagonista;
+    this.crearPolicias(10)
+    this.crearCiudadanos(50)
+    this.targetCamara = this.asesino;
     // this.crearEnemigos(200, 2);
     // this.crearEnemigos(40, 3);
     // this.crearEnemigos(40, 4);
@@ -266,6 +266,44 @@ class Juego {
     }
   }
 
+  crearUnCivil(x, y) {
+    const persona = new Civil(x, y, this);
+    this.civiles.push(persona);
+    this.personas.push(persona);
+  }
+
+  crearUnPolicia(x, y) {
+    const persona = new Policia(x, y, this);
+    this.policias.push(persona);
+    this.personas.push(persona);
+  }
+
+  crearAsesino() {
+    const x = 3500;
+    const y = 1500;
+    const protagonista = new Asesino(x, y, this);
+    this.personas.push(protagonista);
+    this.protagonista = protagonista;
+  }
+
+  crearCiudadanos(cant) {
+    for (let i = 0; i < cant; i++) {
+      const x = Math.random() * this.anchoDelMapa;
+      const y = Math.random() * this.altoDelMapa;
+      const persona = new Ciudadano(x, y, this);
+      this.ciudadanos.push(persona);
+    }
+  }
+
+  crearPolicias(cant) {
+    for (let i = cant; i < cant; i++) {
+      const x = Math.random() * this.anchoDelMapa;
+      const y = Math.random() * this.altoDelMapa;
+      const persona = new Policia(x, y, this);
+      this.policias.push(persona);
+    }
+  }
+
   crearAutos() {
     for (let i = 0; i < 20; i++) {
       const x = Math.random() * this.anchoDelMapa;
@@ -287,33 +325,6 @@ class Juego {
     }
   }
 
-  crearUnCivil(x, y) {
-    const persona = new Civil(x, y, this);
-    this.civiles.push(persona);
-    this.personas.push(persona);
-  }
-
-  crearUnPolicia(x, y) {
-    const persona = new Policia(x, y, this);
-    this.policias.push(persona);
-    this.personas.push(persona);
-  }
-
-  crearAmigos(cant) {
-    for (let i = 0; i < cant; i++) {
-      const x = Math.random() * this.anchoDelMapa;
-      const y = Math.random() * this.altoDelMapa;
-      this.crearUnAmigo(x, y);
-    }
-  }
-  crearAsesino() {
-    const x = 3500;
-    const y = 1500;
-    const protagonista = new Asesino(x, y, this);
-    this.personas.push(protagonista);
-    this.protagonista = protagonista;
-  }
-
   segunQueTeclaEstaApretadaHacerCosas() {
     if (this.teclado[1]) {
       this.crearUnAmigo(this.mouse.posicion.x, this.mouse.posicion.y);
@@ -333,7 +344,7 @@ class Juego {
     } else if (this.teclado["c"]) {
       this.crearUnCivil(this.mouse.posicion.x, this.mouse.posicion.y);
     } else if (this.teclado["p"]) {
-      this.crearUnPolicia(this.mouse.posicion.x, this.mouse.posicion.y);
+      this.crearPolicias(this.mouse.posicion.x, this.mouse.posicion.y);
     }
   }
 

@@ -9,7 +9,6 @@ class Grilla {
 
     this.initGrilla();
   }
-  
   initGrilla() {
     for (let x = 0; x < this.celdaALoAncho; x++) {
       for (let y = 0; y < this.celdaALoAlto; y++) {
