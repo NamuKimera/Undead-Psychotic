@@ -292,7 +292,7 @@ class Juego {
       const x = Math.random() * this.anchoDelMapa;
       const y = Math.random() * this.altoDelMapa;
       const animacionesCiudadano = await PIXI.Assets.load("assets/img/ciudadano.json");
-      const persona = new Ciudadano(x, y, this);
+      const persona = new Ciudadano(animacionesCiudadano, x, y, this);
       this.ciudadanos.push(persona);
     }
   }

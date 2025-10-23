@@ -1,9 +1,9 @@
 class Ciudadano extends Persona {
-  constructor(x, y, juego) {
+  constructor(textureData, x, y, juego) {
     super(x, y, juego);
     this.tipo = Math.floor(Math.random() * 3) + 1;
-    this.bando = "ciudadano";
-    //this.crearSpritesheetAnimado("ciudadano");
+    this.cargarSpritesAnimados(textureData, 15);
+    this.cambiarAnimacion("idleAbajo")
     this.factorPerseguir = 0.4;
     this.factorEscapar = 1 - this.coraje;
     this.distanciaParaLlegarALTarget = 500;
