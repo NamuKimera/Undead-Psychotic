@@ -595,71 +595,27 @@ class Persona extends GameObject {
     return enemigoMasCerca;
   }
 
-  cambiarDeAnimacionSegunLaVelocidadYAngulo() {
-    if (this.angulo == undefined) {
-      return;
-    }
 
-    // if (this.muerto) {
-    //   this.sprite.changeAnimation("hurt");
-    //   // this.sprite.anchor.set(0.5, 0);
-    //   // this.sprite.y = -this.sprite.height;
-    //   this.sprite.loop = false;
-    //   return;
-    // }
 
-    // if (this.recienConvertido) {
-    //   this.sprite.changeAnimation("spellcast");
-    //   this.sprite.loop = false;
-    //   return;
-    // }
+  cambiarDeSpriteAnimadoSegunAngulo() {
+    //0 grados es a la izq, abre en sentido horario, por lo cual 180 es a la derecha
+    //90 es para arriba
+    //270 abajo
 
-    // if (this.pegando) {
-    //   this.sprite.changeAnimation("slash");
-    //   this.velocidad.x *= 0.5;
-    //   this.velocidad.y *= 0.5;
-    //   return;
-    // } else if (this.noPuedoPegarPeroEstoyEnCombate) {
-    //   this.sprite.changeAnimation("combat");
-    //   this.velocidad.x *= 0.7;
-    //   this.velocidad.y *= 0.7;
-    //   return;
-    // }
-
-    // if (this.velocidadLineal > this.velocidadMaxima * 0.7) {
-    //   this.sprite.changeAnimation("run");
-    //   this.sprite.animationSpeed =
-    //     (0.25 * this.velocidadLineal) / this.velocidadMaxima;
-    // } else if (this.velocidadLineal > 0.1) {
-    //   this.sprite.changeAnimation("walk");
-    //   this.sprite.animationSpeed =
-    //     0.05 + (0.3 * this.velocidadLineal) / this.velocidadMaxima;
-    // } else {
-    //   this.sprite.changeAnimation("idle");
-    // }
-
-    /**
-     * MAPEO DE DIRECCIÓN CARDINAL
-     *
-     * Divide el espacio en 4 sectores de 90°:
-     * - Sector 1: [315°, 45°) → Derecha (sprite: "left")
-     * - Sector 2: [45°, 135°) → Abajo (sprite: "up")
-     * - Sector 3: [135°, 225°) → Izquierda (sprite: "right")
-     * - Sector 4: [225°, 315°) → Arriba (sprite: "down")
-     *
-     * Nota: Las direcciones del sprite están invertidas debido al
-     * sistema de coordenadas y la orientación del spritesheet
-     */
-    if (this.angulo >= 315 || this.angulo < 45) {
-      this.sprite.changeDirection("left");
-    } else if (this.angulo >= 45 && this.angulo < 135) {
-      this.sprite.changeDirection("up");
-    } else if (this.angulo >= 135 && this.angulo < 225) {
-      this.sprite.changeDirection("right");
-    } else if (this.angulo >= 225 && this.angulo < 315) {
-      this.sprite.changeDirection("down");
+    if ((this.angulo > 315 && this.angulo < 360) || this.angulo < 45) {
+      this.cambiarAnimacion("caminarDerecha");
+      this.spritesAnimados.caminarDerecha.scale.x = -2;
+    } else if (this.angulo > 135 && this.angulo < 225) {
+      this.cambiarAnimacion("caminarDerecha");
+      this.spritesAnimados.caminarDerecha.scale.x = 2;
+    } else if (this.angulo < 135 && this.angulo > 45) {
+      this.cambiarAnimacion("caminarArriba");
+    } else {
+      this.cambiarAnimacion("caminarAbajo");
     }
   }
+
+  
 
   render() {
     /**
@@ -670,10 +626,8 @@ class Persona extends GameObject {
      * 3. Actualización del sistema de animación
 
      */
-    if (!this.container || !this.sprite) return;
     super.render();
-
-    this.cambiarDeAnimacionSegunLaVelocidadYAngulo();
+    this.cambiarDeSpriteAnimadoSegunAngulo()
   }
 
   borrar() {

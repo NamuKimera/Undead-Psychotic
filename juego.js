@@ -162,7 +162,7 @@ class Juego {
     await this.cargarTexturas();
     this.crearFondo();
 
-    //this.nivel = new Nivel("assets/pixelart/plaza_de_mayo_15.json", this);
+    this.nivel = new Nivel("assets/pixelart/plaza_de_mayo_15.json", this);
 
     // this.crearArboles();
     // this.crearCasitasRandom();

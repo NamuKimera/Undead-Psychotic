@@ -2,7 +2,7 @@ class Policia extends Persona {
   constructor(x, y, juego) {
     super(x, y, juego);
     this.bando = "policia";
-    //this.cargarSpritesAnimados("policia");
+    this.cargarSpritesAnimados("policia");
     this.factorPerseguir = 0.4;
     this.factorEscapar = 1 - this.coraje;
     this.distanciaParaLlegarALTarget = 500;
