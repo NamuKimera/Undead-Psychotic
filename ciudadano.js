@@ -3,7 +3,7 @@ class Ciudadano extends Persona {
     super(x, y, juego);
     this.tipo = Math.floor(Math.random() * 3) + 1;
     this.bando = "ciudadano";
-    this.crearSpritesheetAnimado("ciudadano");
+    //this.crearSpritesheetAnimado("ciudadano");
     this.factorPerseguir = 0.4;
     this.factorEscapar = 1 - this.coraje;
     this.distanciaParaLlegarALTarget = 500;

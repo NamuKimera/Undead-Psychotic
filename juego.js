@@ -162,7 +162,7 @@ class Juego {
     await this.cargarTexturas();
     this.crearFondo();
 
-    this.nivel = new Nivel("assets/pixelart/plaza_de_mayo_15.json", this);
+    //this.nivel = new Nivel("assets/pixelart/plaza_de_mayo_15.json", this);
 
     // this.crearArboles();
     // this.crearCasitasRandom();
@@ -184,8 +184,8 @@ class Juego {
     this.crearCruzTarget();
 
     // Crear el sistema de iluminación
-    this.sistemaDeIluminacion = new SistemaDeIluminacion(this);
-    this.particleSystem = new ParticleSystem(this);
+    //this.sistemaDeIluminacion = new SistemaDeIluminacion(this);
+    //this.particleSystem = new ParticleSystem(this);
   }
 
   async crearCruzTarget() {
@@ -278,18 +278,20 @@ class Juego {
     this.personas.push(persona);
   }
 
-  crearAsesino() {
+  async crearAsesino() {
     const x = 3500;
     const y = 1500;
-    const protagonista = new Asesino(x, y, this);
+    const animacionesAsesino = await PIXI.Assets.load("assets/img/asesino.json");
+    const protagonista = new Asesino(animacionesAsesino, x, y, this);
     this.personas.push(protagonista);
-    this.protagonista = protagonista;
+    this.asesino = protagonista;
   }
 
-  crearCiudadanos(cant) {
+  async crearCiudadanos(cant) {
     for (let i = 0; i < cant; i++) {
       const x = Math.random() * this.anchoDelMapa;
       const y = Math.random() * this.altoDelMapa;
+      const animacionesCiudadano = await PIXI.Assets.load("assets/img/ciudadano.json");
       const persona = new Ciudadano(x, y, this);
       this.ciudadanos.push(persona);
     }
@@ -384,7 +386,7 @@ class Juego {
         if (nuevoZoom !== this.zoom) {
           // Aplicar el nuevo zoom
           this.cambiarZoom(nuevoZoom);
-
+          if(!this.targetCamara) return
           // Recentrar la cámara en el targetCamara
           this.moverContainerPrincipalA(
             -this.targetCamara.posicion.x * this.zoom + this.width / 2,
@@ -412,7 +414,6 @@ class Juego {
   }
 
   gameLoop(time) {
-    console.log("gameLoop", time, this.ahora);
     //borrar lo q hay en los graficos debug
     if (this.graficoDebug) this.graficoDebug.clear();
 

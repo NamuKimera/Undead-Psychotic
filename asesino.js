@@ -1,12 +1,12 @@
 class Asesino extends Persona {
-  constructor(x, y, juego) {
+  constructor(textureData, x, y, juego) {
     super(x, y, juego);
 
     // Configuración especial del protagonista
     this.vida = 1;
     this.vision = 1000; // Visión ilimitada
-    this.bando = "asesino"; // Bando del jugador
-    this.crearSpritesheetAnimado("asesino");
+    this.cargarSpritesAnimados(textureData, 15);
+    this.cambiarAnimacion("idleAbajo")
     this.container.label = "prota";
     this.factorIrAlTarget = 0.9;
     this.distanciaParaEmpezarABajarLaVelocidad = this.radio * 20;
@@ -14,6 +14,7 @@ class Asesino extends Persona {
     this.esperarAQueTengaSpriteCargado(() => {
       this.crearBarritaVida();
     });
+    juego.targetCamara = this
   }
 
   morir() {
