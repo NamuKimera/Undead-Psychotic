@@ -419,14 +419,9 @@ class Persona extends GameObject {
     if (this.behaviorFSM.currentStateName !== "enCombate") return;
     if (this.distanciaAlEnemigoMasCerca > this.rangoDeAtaque) return;
 
-    this.angulo =
-      radianesAGrados(
-        Math.atan2(
-          this.enemigoMasCerca.posicion.y - this.posicion.y,
-          this.enemigoMasCerca.posicion.x - this.posicion.x
-        )
-      ) + 180;
+    this.angulo = radianesAGrados(Math.atan2(this.enemigoMasCerca.posicion.y - this.posicion.y, this.enemigoMasCerca.posicion.x - this.posicion.x)) + 180;
   }
+
   verificarSiEstoyMuerto() {
     if (this.vida <= 0) {
       this.morir();

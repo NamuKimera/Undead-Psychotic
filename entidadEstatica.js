@@ -6,6 +6,7 @@ class EntidadEstatica extends GameObject {
 
     this.render();
   }
+  
   calcularRadio() {
     this.radio = (this.sprite.width + Math.sqrt(this.sprite.height)) * 0.25;
   }

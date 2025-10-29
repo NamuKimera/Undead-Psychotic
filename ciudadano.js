@@ -17,14 +17,13 @@ class Ciudadano extends Persona {
   tick() {
     // if (this.muerto) return;
     this.verificarSiEstoyMuerto();
-
     this.percibirEntorno();
-    // this.caminarSinRumbo();
-    // this.cohesion();
+    this.caminarSinRumbo();
+    this.cohesion();
     this.alineacion();
     this.separacion();
+    this.perseguir();
 
-    // this.perseguir();
     if (this.enemigoMasCerca) {
       this.perseguidor = this.enemigoMasCerca;
       this.escapar();

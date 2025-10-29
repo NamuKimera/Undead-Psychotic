@@ -419,10 +419,7 @@ class GameObject {
   }
 
   async crearSombra() {
-    await PIXI.Assets.load({
-      alias: "sombra",
-      src: "assets/pixelart/sombra.png",
-    });
+    await PIXI.Assets.load({alias: "sombra", src: "assets/pixelart/sombra.png"});
     this.sombra = new PIXI.Sprite(PIXI.Assets.get("sombra"));
 
     this.sombra.zIndex = -1;
@@ -434,9 +431,6 @@ class GameObject {
   }
 
   estoyVisibleEnPantalla(changui = 1) {
-    //el changui es un multiplicador para el tamaño de pantalla
-    //1 es el tamaño normal de la pantalla
-    //2 es el doble, entonces es como si: si fuera el doble de grande, se veria en pantalla?
     let posicionEnPantalla = this.getPosicionEnPantalla();
     return (
       posicionEnPantalla.x > 0 - this.juego.width * (changui - 1) &&

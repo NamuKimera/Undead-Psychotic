@@ -47,25 +47,6 @@ class Juego {
     this.setupResizeHandler();
   }
 
-  updateDimensions() {
-    this.width = window.innerWidth;
-    this.height = window.innerHeight;
-  }
-
-  setupResizeHandler() {
-    window.addEventListener("resize", () => {
-      this.updateDimensions();
-      if (this.pixiApp) {
-        this.pixiApp.renderer.resize(this.width, this.height);
-      }
-      // Redimensionar la RenderTexture del sistema de iluminación
-      if (this.sistemaDeIluminacion) {
-        this.sistemaDeIluminacion.redimensionarRenderTexture();
-      }
-      if (this.ui) this.ui.resize();
-    });
-  }
-
   //async indica q este metodo es asyncronico, es decir q puede usar "await"
   async initPIXI() {
     //creamos la aplicacion de pixi y la guardamos en la propiedad pixiApp
@@ -92,7 +73,6 @@ class Juego {
     //es decir: en cada frame vamos a ejecutar el metodo this.gameLoop
     this.pixiApp.ticker.add(this.gameLoop.bind(this));
 
-    this.agregarListenersDeTeclado();
 
     this.agregarInteractividadDelMouse();
     this.pixiApp.stage.sortableChildren = true;
@@ -100,31 +80,29 @@ class Juego {
     this.ui = new UI(this);
   }
 
+  setupResizeHandler() {
+    window.addEventListener("resize", () => {
+      this.updateDimensions();
+      if (this.pixiApp) {
+        this.pixiApp.renderer.resize(this.width, this.height);
+      }
+      // Redimensionar la RenderTexture del sistema de iluminación
+      if (this.sistemaDeIluminacion) {
+        this.sistemaDeIluminacion.redimensionarRenderTexture();
+      }
+      if (this.ui) this.ui.resize();
+    });
+  }
+
+  updateDimensions() {
+    this.width = window.innerWidth;
+    this.height = window.innerHeight;
+  }
+
   meterATodosLosObstaculosALaGrilla() {
     for (let obstaculo of this.obstaculos) {
       obstaculo.actualizarMiPosicionEnLaGrilla();
     }
-  }
-
-  agregarListenersDeTeclado() {
-    window.onkeydown = (event) => {
-      this.teclado[event.key.toLowerCase()] = true;
-      if (event.key == "1") {
-        this.crearUnAmigo(this.mouse.posicion.x, this.mouse.posicion.y);
-      } else if (parseInt(event.key)) {
-        this.crearUnEnemigo(
-          parseInt(event.key),
-          this.mouse.posicion.x,
-          this.mouse.posicion.y
-        );
-      }
-    };
-    window.onkeyup = (event) => {
-      this.teclado[event.key.toLowerCase()] = false;
-      if (event.key.toLowerCase() == "u") {
-        this.hacerQueLaCamaraSigaAalguienRandom();
-      }
-    };
   }
 
   async crearFondo() {
@@ -143,6 +121,7 @@ class Juego {
 
     this.pixiApp.stage.addChild(this.containerBG);
   }
+
   crearGraficoDebug() {
     this.graficoDebug = new PIXI.Graphics();
     this.graficoDebug.zIndex = 51231231231;
@@ -196,11 +175,13 @@ class Juego {
       },
     });
   }
+
   hacerQueCruzTargetAparezca() {
     gsap.killTweensOf(this.cruzTarget);
     this.cruzTarget.visible = true;
     this.cruzTarget.alpha = 1;
   }
+  
   crearCasitasRandom() {
     for (let i = 0; i < 100; i++) {
       const monumento = new Monumento(
