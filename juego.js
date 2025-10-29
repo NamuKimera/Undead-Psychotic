@@ -1,23 +1,6 @@
-const Z_INDEX = {
-  containerBG: 0,
-  graficoSombrasProyectadas: 1,
-  containerIluminacion: 2,
-  containerPrincipal: 3,
-  spriteAmarilloParaElAtardecer: 4,
-  containerUI: 5,
-};
-
 class Juego {
   pixiApp;
   personas = [];
-  ciudadanos = [];
-  policias = [];
-  faroles = [];
-  monumentos = [];
-  obstaculos = [];
-  arboles = [];
-  autos = [];
-  objetosInanimados = [];
   asesino;
   width;
   height;
@@ -41,7 +24,7 @@ class Juego {
     this.minZoom = 0.1;
     this.maxZoom = 2;
     this.zoomStep = 0.1;
-    this.grilla = new Grilla(this, 150, this.anchoDelMapa, this.altoDelMapa);
+    // this.grilla = new Grilla(this, 150, this.anchoDelMapa, this.altoDelMapa);
 
     this.initPIXI();
     this.setupResizeHandler();
@@ -51,14 +34,18 @@ class Juego {
   async initPIXI() {
     //creamos la aplicacion de pixi y la guardamos en la propiedad pixiApp
     this.pixiApp = new PIXI.Application();
+
+    this.pixiApp.stage.name = "el stage";
+
+    //esto es para que funcione la extension de pixi
     globalThis.__PIXI_APP__ = this.pixiApp;
+
     const opcionesDePixi = {
       background: "#1099bb",
       width: this.width,
       height: this.height,
-      antialias: true,
-      resolution: 1,
-      resizeTo: window,
+      antialias: false,
+      SCALE_MODE: PIXI.SCALE_MODES.NEAREST,
     };
 
     //inicializamos pixi con las opciones definidas anteriormente
@@ -69,15 +56,30 @@ class Juego {
     // //agregamos el elementos canvas creado por pixi en el documento html
     document.body.appendChild(this.pixiApp.canvas);
 
+    for (let i = 0; i < 1; i++) {
+      const x = 0.5 * this.width;
+      const y = 0.5 * this.height;
+      //crea una instancia de clase Conejito, el constructor de dicha clase toma como parametros la textura
+      // q queremos usar,X,Y y una referencia a la instancia del juego (this)
+      const animacionesProtagonista = await PIXI.Assets.load("assets/personajes/img/personaje.json");
+      const protagonista = new Asesino(animacionesProtagonista, x, y, this);
+      this.personas.push(protagonista);
+    }
+
     //agregamos el metodo this.gameLoop al ticker.
     //es decir: en cada frame vamos a ejecutar el metodo this.gameLoop
     this.pixiApp.ticker.add(this.gameLoop.bind(this));
 
-
     this.agregarInteractividadDelMouse();
-    this.pixiApp.stage.sortableChildren = true;
-    this.crearNivel();
-    this.ui = new UI(this);
+
+    // this.asignarPerseguidorRandomATodos();
+    // this.asignarTargets();
+    this.asignarElMouseComoTargetATodasLasPersonas();
+  }
+
+  updateDimensions() {
+    this.width = window.innerWidth;
+    this.height = window.innerHeight;
   }
 
   setupResizeHandler() {
@@ -94,17 +96,6 @@ class Juego {
     });
   }
 
-  updateDimensions() {
-    this.width = window.innerWidth;
-    this.height = window.innerHeight;
-  }
-
-  meterATodosLosObstaculosALaGrilla() {
-    for (let obstaculo of this.obstaculos) {
-      obstaculo.actualizarMiPosicionEnLaGrilla();
-    }
-  }
-
   async crearFondo() {
     this.fondo = new PIXI.TilingSprite(await PIXI.Assets.load("assets/bg.jpg"));
     this.fondo.zIndex = -999999999999999999999;
@@ -114,322 +105,46 @@ class Juego {
     this.containerBG.addChild(this.fondo);
   }
 
-  crearContainerBG() {
-    this.containerBG = new PIXI.Container();
-    this.containerBG.label = "containerBG";
-    this.containerBG.zIndex = Z_INDEX.containerBG;
-
-    this.pixiApp.stage.addChild(this.containerBG);
-  }
-
-  crearGraficoDebug() {
-    this.graficoDebug = new PIXI.Graphics();
-    this.graficoDebug.zIndex = 51231231231;
-    this.graficoDebug.label = "graficoDebug";
-    this.containerPrincipal.addChild(this.graficoDebug);
-  }
-
-  async crearNivel() {
-    this.containerPrincipal = new PIXI.Container();
-    this.containerPrincipal.label = "containerPrincipal";
-    this.containerPrincipal.zIndex = Z_INDEX.containerPrincipal;
-    this.pixiApp.stage.addChild(this.containerPrincipal);
-
-    this.crearContainerBG();
-    this.crearGraficoDebug();
-
-    await this.cargarTexturas();
-    this.crearFondo();
-
-    this.nivel = new Nivel("assets/pixelart/plaza_de_mayo_15.json", this);
-
-    this.crearAsesino();
-    this.crearPolicias(10)
-    this.crearCiudadanos(50)
-    this.targetCamara = this.asesino;
-
-    this.crearCruzTarget();
-
-    // Crear el sistema de iluminación
-    //this.sistemaDeIluminacion = new SistemaDeIluminacion(this);
-    //this.particleSystem = new ParticleSystem(this);
-  }
-
-  async crearCruzTarget() {
-    this.cruzTarget = new PIXI.Sprite(
-      await PIXI.Assets.load("assets/pixelart/target.png")
-    );
-    this.cruzTarget.visible = false;
-
-    this.cruzTarget.zIndex = 999999999999;
-    this.cruzTarget.anchor.set(0.5, 0.5);
-    this.containerPrincipal.addChild(this.cruzTarget);
-  }
-
-  hacerQueCruzTargetSeVaya() {
-    gsap.to(this.cruzTarget, {
-      alpha: 0,
-      duration: 1,
-      onComplete: () => {
-        this.cruzTarget.visible = false;
-      },
-    });
-  }
-
-  hacerQueCruzTargetAparezca() {
-    gsap.killTweensOf(this.cruzTarget);
-    this.cruzTarget.visible = true;
-    this.cruzTarget.alpha = 1;
-  }
-  
-  crearCasitasRandom() {
-    for (let i = 0; i < 100; i++) {
-      const monumento = new Monumento(
-        Math.random() * this.anchoDelMapa,
-        Math.random() * this.altoDelMapa,
-        this,
-        "casa" + Math.floor(Math.random() * 2 + 1),
-        1
-      );
-      this.obstaculos.push(monumento);
-    }
-  }
-
-  hacerQueLaCamaraSigaAalguienRandom() {
-    this.targetCamara = this.getPersonaRandom();
-  }
-
-  async cargarTexturas() {
-    await PIXI.Assets.load([
-      "assets/bg.jpg",
-      "assets/pixelart/target.png",
-      "assets/pixelart/globo_de_dialogo.png",
-    ]);
-  }
-
-  async crearAsesino() {
-    const x = 3500;
-    const y = 1500;
-    const animacionesAsesino = await PIXI.Assets.load("assets/img/asesino.json");
-    const protagonista = new Asesino(animacionesAsesino, x, y, this);
-    this.personas.push(protagonista);
-    this.asesino = protagonista;
-  }
-
-  async crearCiudadanos(cant) {
-    for (let i = 0; i < cant; i++) {
-      const x = Math.random() * this.anchoDelMapa;
-      const y = Math.random() * this.altoDelMapa;
-      const animacionesCiudadano = await PIXI.Assets.load("assets/img/ciudadano.json");
-      const persona = new Ciudadano(animacionesCiudadano, x, y, this);
-      this.ciudadanos.push(persona);
-    }
-  }
-
-  crearPolicias(cant) {
-    for (let i = cant; i < cant; i++) {
-      const x = Math.random() * this.anchoDelMapa;
-      const y = Math.random() * this.altoDelMapa;
-      const persona = new Policia(x, y, this);
-      this.policias.push(persona);
-      this.personas.push(persona);
-    }
-  }
-
-  crearAutos() {
-    for (let i = 0; i < 20; i++) {
-      const x = Math.random() * this.anchoDelMapa;
-      const y = Math.random() * this.altoDelMapa;
-      const auto = new Auto(x, y, this);
-      this.autos.push(auto);
-      this.objetosInanimados.push(auto);
-    }
-  }
-
-  crearArboles() {
-    for (let i = 0; i < 200; i++) {
-      const x = Math.random() * this.anchoDelMapa;
-      const y = Math.random() * this.altoDelMapa;
-      const arbol = new Arbol(x, y, this);
-      this.arboles.push(arbol);
-      this.obstaculos.push(arbol);
-      this.objetosInanimados.push(arbol);
-    }
-  }
-
   agregarInteractividadDelMouse() {
-    this.pixiApp.canvas.oncontextmenu = (event) => {
-      event.preventDefault();
-    };
     // Escuchar el evento mousemove
     this.pixiApp.canvas.onmousemove = (event) => {
-      this.mouse.posicion = this.convertirCoordenadaDelMouse(event.x, event.y);
-    };
-
-    this.pixiApp.canvas.onmousedown = (event) => {
-      this.mouse.down = this.convertirCoordenadaDelMouse(event.x, event.y);
-      this.mouse.apretado = true;
-    };
-    this.pixiApp.canvas.onmouseup = (event) => {
-      if (event.button != 0) return;
-      this.mouse.up = this.convertirCoordenadaDelMouse(event.x, event.y);
-      this.mouse.apretado = false;
-      this.ponerCruzTargetDondeElMouseHizoClick(this.mouse.up);
-    };
-
-    // Event listener para la rueda del mouse (zoom)
-    this.pixiApp.canvas.addEventListener(
-      "wheel",
-      (event) => {
-        event.preventDefault(); // Prevenir el scroll de la página
-
-        const zoomDelta = event.deltaY > 0 ? -this.zoomStep : this.zoomStep;
-        const nuevoZoom = Math.max(
-          this.minZoom,
-          Math.min(this.maxZoom, this.zoom + zoomDelta)
-        );
-
-        if (nuevoZoom !== this.zoom) {
-          // Aplicar el nuevo zoom
-          this.cambiarZoom(nuevoZoom);
-          if(!this.targetCamara) return
-          // Recentrar la cámara en el targetCamara
-          this.moverContainerPrincipalA(
-            -this.targetCamara.posicion.x * this.zoom + this.width / 2,
-            -this.targetCamara.posicion.y * this.zoom + this.height / 2
-          );
-        }
-      },
-      { passive: false }
-    );
-  }
-
-  ponerCruzTargetDondeElMouseHizoClick(posicion) {
-    this.cruzTarget.x = posicion.x;
-    this.cruzTarget.y = posicion.y;
-    this.hacerQueCruzTargetAparezca();
-  }
-
-  convertirCoordenadaDelMouse(mouseX, mouseY) {
-    // Convertir coordenadas del mouse del viewport a coordenadas del mundo
-    // teniendo en cuenta la posición y escala del containerPrincipal
-    return {
-      x: (mouseX - this.containerPrincipal.x) / this.zoom,
-      y: (mouseY - this.containerPrincipal.y) / this.zoom,
+      this.mouse.posicion = { x: event.x, y: event.y };
     };
   }
 
   gameLoop(time) {
-    //borrar lo q hay en los graficos debug
-    if (this.graficoDebug) this.graficoDebug.clear();
-
-    for (let unpersona of this.personas) unpersona.tick();
-    for (let unpersona of this.personas) unpersona.render();
-
-    for (let arbol of this.arboles) arbol.tick();
-    for (let farol of this.faroles) farol.tick();
-
-    for (let obstaculo of this.obstaculos) obstaculo.render();
-
-    // Actualizar el sistema de iluminación
-    if (this.sistemaDeIluminacion) this.sistemaDeIluminacion.tick();
-
-    if (this.particleSystem) this.particleSystem.update();
-    if (this.ui) this.ui.tick();
-
-    this.hacerQLaCamaraSigaAAlguien();
-    this.calcularFPS();
-
-    if (!this.debug) return;
-    // Dibujar las celdas de la grilla
-    // Object.values(this.grilla.celdas).forEach((celda) => celda.dibujar());
-    for (let obstaculo of this.obstaculos) obstaculo.dibujarCirculo();
-    for (let unpersona of this.personas) unpersona.dibujarCirculo();
-  }
-
-  calcularFPS() {
-    this.deltaTime = performance.now() - this.ahora;
-    this.ahora = performance.now();
-    this.fps = 1000 / this.deltaTime;
-    this.ratioDeltaTime = this.deltaTime / 16.66;
-  }
-
-  toggleIluminacion() {
-    if (this.sistemaDeIluminacion) {
-      this.sistemaDeIluminacion.toggle();
+    //iteramos por todos los conejitos
+    for (let unaPersona of this.personas) {
+      //ejecutamos el metodo tick de cada conejito
+      unaPersona.tick();
+      unaPersona.render();
     }
   }
 
-  toggleBarrasDeVida() {
-    this.barrasDeVidaVisibles = !this.barrasDeVidaVisibles;
-    this.personas.forEach((persona) => {
-      // Verificar que la persona no esté muerta y tenga barra de vida
-      if (!persona.muerto && persona.containerBarraVida) {
-        persona.containerBarraVida.visible = this.barrasDeVidaVisibles;
-      }
-    });
-  }
-  
-  toggleDebug() {
-    this.debug = !this.debug;
+  getConejitoRandom() {
+    return this.conejitos[Math.floor(this.conejitos.length * Math.random())];
   }
 
-  hacerQLaCamaraSigaAAlguien() {
-    if (!this.targetCamara) return;
-    // Ajustar la posición considerando el zoom actual
-    let targetX = -this.targetCamara.posicion.x * this.zoom + this.width / 2;
-    let targetY = -this.targetCamara.posicion.y * this.zoom + this.height / 2;
-
-    const x = (targetX - this.containerPrincipal.x) * 0.1;
-    const y = (targetY - this.containerPrincipal.y) * 0.1;
-
-    this.moverContainerPrincipalA(
-      this.containerPrincipal.x + x,
-      this.containerPrincipal.y + y
-    );
+  asignarTargets() {
+    for (let personas of this.personas) {
+      personas.asignarTarget(this.getConejitoRandom());
+    }
   }
 
-  moverContainerPrincipalA(x, y) {
-    this.containerPrincipal.x = x;
-    this.containerPrincipal.y = y;
-    this.containerBG.x = x;
-    this.containerBG.y = y;
+  asignarElMouseComoTargetATodasLasPersonas() {
+    for (let personas of this.personas) {
+      personas.asignarTarget(this.mouse);
+    }
   }
 
-  cambiarZoom(zoom) {
-    this.zoom = zoom;
-    this.containerPrincipal.scale.set(this.zoom);
-    this.containerBG.scale.set(this.zoom);
+  asignarPerseguidorRandomATodos() {
+    for (let personas of this.personas) {
+      personas.perseguidor = this.getConejitoRandom();
+    }
   }
-
-  finDelJuego() {
-    alert("Te moriste! fin del juego");
+  asignarElMouseComoPerseguidorATodasLasPersonas() {
+    for (let personas of this.personas) {
+      personas.perseguidor = this.mouse;
+    }
   }
-
-  getPersonaRandom() {
-    return this.personas[Math.floor(this.personas.length * Math.random())];
-  }
-
-  // asignarTargets() {
-  //   for (let cone of this.personas) {
-  //     cone.asignarTarget(this.getpersonaRandom());
-  //   }
-  // }
-
-  // asignarElMouseComoTargetATodosLospersonas() {
-  //   for (let cone of this.personas) {
-  //     cone.asignarTarget(this.mouse);
-  //   }
-  // }
-
-  // asignarPerseguidorRandomATodos() {
-  //   for (let cone of this.personas) {
-  //     cone.perseguidor = this.getpersonaRandom();
-  //   }
-  // }
-  // asignarElMouseComoPerseguidorATodosLospersonas() {
-  //   for (let cone of this.personas) {
-  //     cone.perseguidor = this.mouse;
-  //   }
-  // }
 }
