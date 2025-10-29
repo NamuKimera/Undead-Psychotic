@@ -15,6 +15,26 @@ class Ciudadano extends Persona {
   }
 
   tick() {
-    
+    // if (this.muerto) return;
+    this.verificarSiEstoyMuerto();
+    this.percibirEntorno();
+    this.caminarSinRumbo();
+    this.cohesion();
+    this.alineacion();
+    this.separacion();
+    this.perseguir();
+
+    if (this.enemigoMasCerca) {
+      this.perseguidor = this.enemigoMasCerca;
+      this.escapar();
+    }
+
+    this.noChocarConObstaculos();
+    this.repelerSuavementeObstaculos();
+    // this.pegarSiEstaEnMiRango();
+
+    this.aplicarFisica();
+
+    this.calcularAnguloYVelocidadLineal();
   }
 }

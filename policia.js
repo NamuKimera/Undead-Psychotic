@@ -1,6 +1,7 @@
 class Policia extends Persona {
   constructor(textureData, x, y, juego) {
     super(x, y, juego);
+    this.bando = "policia";
     this.cargarSpritesAnimados(textureData, 15);
     this.factorPerseguir = 0.4;
     this.factorEscapar = 1 - this.coraje;

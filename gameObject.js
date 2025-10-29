@@ -13,36 +13,44 @@ class GameObject {
   distanciaPersonal = 20;
   distanciaParaLlegar = 300;
 
-  constructor(x, y, juego) {
-    // Rango de visión aleatorio entre 400-700 píxeles
-    this.vision = Math.random() * 300 + 400;
+  constructor(textureData, x, y, juego) {
+    this.container = new PIXI.Container();
 
-    // Sistema de física vectorial 2D
-    this.posicion = { x: x, y: y }; // Posición actual en píxeles
-    this.velocidad = { x: 0, y: 0 }; // Velocidad en píxeles/frame
-    this.aceleracion = { x: 0, y: 0 }; // Aceleración en píxeles/frame²
+    this.container.name = "container";
+    this.vision = Math.random() * 200 + 1300;
+    //guarda una referencia a la instancia del juego
+    this.posicion = { x: x, y: y };
+    this.velocidad = { x: Math.random() * 10, y: Math.random() * 10 };
+    this.aceleracion = { x: 0, y: 0 };
 
-    // Límites físicos para estabilidad del sistema
-    this.aceleracionMaxima = 0.2; // Máxima aceleración aplicable
-    this.velocidadMaxima = 3; // Velocidad terminal del objeto
+    this.juego = juego;
+    this.cargarSpritesAnimados(textureData, 15);
+    this.cambiarAnimacion("idleAbajo")
+    //generamos un ID para este conejito
+    this.id = Math.floor(Math.random() * 99999999);
 
-    // Propiedades de colisión y combate
-    this.radio = 12; // Radio de colisión en píxeles
-    this.rangoDeAtaque = 25 + Math.random() * 10; // Rango aleatorio 25-35 píxeles
+    // tomo como parametro la textura y creo un sprite
 
-    // Referencias del sistema
-    this.juego = juego; // Referencia al motor del juego
-    this.id = Math.floor(Math.random() * 9999999999999); // ID único aleatorio
+    // this.sprite.play();
+    // this.sprite.loop = true;
+    // this.sprite.animationSpeed = 0.1;
+    // this.sprite.scale.set(2);
 
-    // Configuración del sistema de renderizado PIXI.js
-    this.container = new PIXI.Container(); // Container para agrupar elementos visuales
-    this.container.label = "gameObject - " + this.id;
-    this.container.x = x; // Posición inicial X en pantalla
-    this.container.y = y; // Posición inicial Y en pantalla
+    // //le asigno x e y al sprite
+    // this.sprite.x = x;
+    // this.sprite.y = y;
 
-    // Jerarquía de renderizado: Juego -> ContainerPrincipal -> Container -> Sprite
-    // El containerPrincipal maneja la cámara y el scrolling del mundo
-    // this.juego.containerPrincipal.addChild(this.container);
+    // //establezco el punto de pivot en el medio:
+    // this.sprite.anchor.set(0.5);
+
+    // //agrego el sprite al stage
+    // //this.juego es una referencia a la instancia de la clase Juego
+    // //a su vez el juego tiene una propiedad llamada pixiApp, q es la app de PIXI misma,
+    // //q a su vez tiene el stage. Y es el Stage de pixi q tiene un metodo para agregar 'hijos'
+    // //(el stage es como un container/nodo)
+    // this.juego.pixiApp.stage.addChild(this.sprite);
+
+    this.juego.pixiApp.stage.addChild(this.container);
   }
 
   cambiarAnimacion(cual) {
@@ -54,7 +62,21 @@ class GameObject {
     this.spritesAnimados[cual].visible = true;
   }
 
-  
+  async cargarSpritesAnimados(textureData, escala) {
+    for (let key of Object.keys(textureData.animations)) {
+      this.spritesAnimados[key] = new PIXI.AnimatedSprite(
+        textureData.animations[key]
+      );
+
+      this.spritesAnimados[key].play();
+      this.spritesAnimados[key].loop = true;
+      this.spritesAnimados[key].animationSpeed = 0.1;
+      this.spritesAnimados[key].scale.set(escala);
+      this.spritesAnimados[key].anchor.set(0.5, 1);
+
+      this.container.addChild(this.spritesAnimados[key]);
+    }
+  }
 
   tick() {
     //TODO: hablar de deltatime
@@ -89,18 +111,6 @@ class GameObject {
     );
   }
 
-  async crearSombra() {
-    await PIXI.Assets.load({alias: "sombra", src: "assets/pixelart/sombra.png"});
-    this.sombra = new PIXI.Sprite(PIXI.Assets.get("sombra"));
-
-    this.sombra.zIndex = -1;
-    this.sombra.anchor.set(0.5, 0.5);
-    this.sombra.width = this.radio * 3;
-    this.sombra.height = this.radio * 1.33;
-    this.sombra.alpha = 0.8;
-    this.container.addChild(this.sombra);
-  }
-  
   separacion() {
     let promedioDePosicionDeAquellosQEstanMuyCercaMio = { x: 0, y: 0 };
     let contador = 0;
