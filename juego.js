@@ -1,3 +1,12 @@
+const Z_INDEX = {
+  containerBG: 0,
+  graficoSombrasProyectadas: 1,
+  containerIluminacion: 2,
+  containerPrincipal: 3,
+  spriteAmarilloParaElAtardecer: 4,
+  containerUI: 5,
+};
+
 class Juego {
   pixiApp;
   personas = [];
@@ -5,11 +14,9 @@ class Juego {
   width;
   height;
   debug = false;
-  barrasDeVidaVisibles = true;
   distanciaALaQueLosObjetosTienenTodaLaLuz = 157;
   factorMagicoArriba = 2;
   factorMagicoAbajo = 2.18;
-  teclado = {};
   ahora = performance.now();
   BASE_Z_INDEX = 50000;
 
@@ -34,18 +41,14 @@ class Juego {
   async initPIXI() {
     //creamos la aplicacion de pixi y la guardamos en la propiedad pixiApp
     this.pixiApp = new PIXI.Application();
-
-    this.pixiApp.stage.name = "el stage";
-
-    //esto es para que funcione la extension de pixi
     globalThis.__PIXI_APP__ = this.pixiApp;
-
     const opcionesDePixi = {
       background: "#1099bb",
       width: this.width,
       height: this.height,
-      antialias: false,
-      SCALE_MODE: PIXI.SCALE_MODES.NEAREST,
+      antialias: true,
+      resolution: 1,
+      resizeTo: window,
     };
 
     //inicializamos pixi con las opciones definidas anteriormente
