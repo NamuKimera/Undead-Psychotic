@@ -55,8 +55,9 @@ class Juego {
 
     // //agregamos el elementos canvas creado por pixi en el documento html
     document.body.appendChild(this.pixiApp.canvas);
+    
 
-    for (let i = 0; i < 1; i++) {
+    for (let i = 0; i < 30; i++) {
       const x = 0.5 * this.width;
       const y = 0.5 * this.height;
       //crea una instancia de clase Conejito, el constructor de dicha clase toma como parametros la textura
@@ -65,6 +66,7 @@ class Juego {
       const protagonista = new Asesino(animacionesProtagonista, x, y, this);
       this.personas.push(protagonista);
     }
+    this.targetCamara = this.asesino;
 
     //agregamos el metodo this.gameLoop al ticker.
     //es decir: en cada frame vamos a ejecutar el metodo this.gameLoop
@@ -73,8 +75,17 @@ class Juego {
     this.agregarInteractividadDelMouse();
 
     // this.asignarPerseguidorRandomATodos();
-    // this.asignarTargets();
+    this.asignarTargets();
     this.asignarElMouseComoTargetATodasLasPersonas();
+  }
+
+  async crearAsesino() {
+    const x = 3500;
+    const y = 1500;
+    const animacionesAsesino = await PIXI.Assets.load("assets/personajes/img/personaje.json");
+    const protagonista = new Asesino(animacionesAsesino, x, y, this);
+    this.personas.push(protagonista);
+    this.asesino = protagonista;
   }
 
   updateDimensions() {
@@ -121,13 +132,51 @@ class Juego {
     }
   }
 
-  getConejitoRandom() {
-    return this.conejitos[Math.floor(this.conejitos.length * Math.random())];
+  async crearCruzTarget() {
+    this.cruzTarget = new PIXI.Sprite(
+      await PIXI.Assets.load("assets/pixelart/target.png")
+    );
+    this.cruzTarget.visible = false;
+
+    this.cruzTarget.zIndex = 999999999999;
+    this.cruzTarget.anchor.set(0.5, 0.5);
+    this.containerPrincipal.addChild(this.cruzTarget);
+  }
+
+  hacerQueCruzTargetSeVaya() {
+    gsap.to(this.cruzTarget, {
+      alpha: 0,
+      duration: 1,
+      onComplete: () => {
+        this.cruzTarget.visible = false;
+      },
+    });
+  }
+
+  hacerQueCruzTargetAparezca() {
+    gsap.killTweensOf(this.cruzTarget);
+    this.cruzTarget.visible = true;
+    this.cruzTarget.alpha = 1;
+  }
+
+  hacerQueLaCamaraSigaAalguienRandom() {
+    this.targetCamara = this.getPersonaRandom();
+  }
+
+  getPersonaRandom() {
+    return this.personas[Math.floor(this.personas.length * Math.random())];
+  }
+
+  async cargarTexturas() {
+    await PIXI.Assets.load([
+      "assets/bg.jpg",
+      "assets/pixelart/target.png",
+    ]);
   }
 
   asignarTargets() {
     for (let personas of this.personas) {
-      personas.asignarTarget(this.getConejitoRandom());
+      personas.asignarTarget(this.getPersonaRandom());
     }
   }
 
