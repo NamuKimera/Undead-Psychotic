@@ -158,19 +158,15 @@ class GameObject {
     this.barritaVida.tint = mapColors(0xff0000, 0x7fca34, ratio);
   }
 
-  tick() {
-    this.aplicarFisica();
-  }
-
   aplicarFisica() {
-    /**
+    /*
      * SISTEMA DE FÍSICA ESTABLE CON DELTATIME
-     *
+
      * Limitamos deltaTime para evitar inestabilidad cuando los FPS bajan:
      * - FPS normales (60): deltaTime ≈ 1
      * - FPS bajos (15): deltaTime ≈ 4 → limitado a 3
      * - Esto previene saltos extremos en la simulación física
-     */
+    */
     const deltaTime = Math.min(this.juego.ratioDeltaTime, 3);
 
     // PASO 1: Aplicar fuerzas acumuladas
@@ -509,5 +505,9 @@ class GameObject {
 
     this.celdaFrameAnterior = this.celdaActual;
     this.celdaActual = nuevaCelda;
+  }
+
+  tick() {
+    this.aplicarFisica();
   }
 }

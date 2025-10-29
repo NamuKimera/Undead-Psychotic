@@ -164,22 +164,10 @@ class Juego {
 
     this.nivel = new Nivel("assets/pixelart/plaza_de_mayo_15.json", this);
 
-    // this.crearArboles();
-    // this.crearCasitasRandom();
     this.crearAsesino();
     this.crearPolicias(10)
     this.crearCiudadanos(50)
     this.targetCamara = this.asesino;
-    // this.crearEnemigos(200, 2);
-    // this.crearEnemigos(40, 3);
-    // this.crearEnemigos(40, 4);
-    // this.crearEnemigos(40, 5);
-    // this.crearEnemigos(40, 6);
-    // this.crearEnemigos(40, 7);
-
-    // this.crearArbolesRAndom
-
-    // this.crearAmigos(400);
 
     this.crearCruzTarget();
 
@@ -238,46 +226,6 @@ class Juego {
     ]);
   }
 
-  crearUnEnemigo(bando, x, y, callback) {
-    const persona = new Enemigo(x, y, this, bando);
-    this.personas.push(persona);
-    this.enemigos.push(persona);
-    if (callback instanceof Function)
-      persona.esperarAQueTengaSpriteCargado(() => callback());
-    return persona;
-  }
-
-  crearUnAmigo(x, y, callback) {
-    const persona = new Amigo(x, y, this);
-    this.personas.push(persona);
-    this.amigos.push(persona);
-    if (callback instanceof Function)
-      persona.esperarAQueTengaSpriteCargado(() => callback());
-    return persona;
-  }
-
-  crearEnemigos(cant, bando) {
-    for (let i = 0; i < cant; i++) {
-      const x = Math.random() * this.anchoDelMapa;
-      const y = Math.random() * this.altoDelMapa;
-      const persona = new Enemigo(x, y, this, bando);
-      this.personas.push(persona);
-      this.enemigos.push(persona);
-    }
-  }
-
-  crearUnCivil(x, y) {
-    const persona = new Civil(x, y, this);
-    this.civiles.push(persona);
-    this.personas.push(persona);
-  }
-
-  crearUnPolicia(x, y) {
-    const persona = new Policia(x, y, this);
-    this.policias.push(persona);
-    this.personas.push(persona);
-  }
-
   async crearAsesino() {
     const x = 3500;
     const y = 1500;
@@ -303,6 +251,7 @@ class Juego {
       const y = Math.random() * this.altoDelMapa;
       const persona = new Policia(x, y, this);
       this.policias.push(persona);
+      this.personas.push(persona);
     }
   }
 
@@ -327,36 +276,12 @@ class Juego {
     }
   }
 
-  segunQueTeclaEstaApretadaHacerCosas() {
-    if (this.teclado[1]) {
-      this.crearUnAmigo(this.mouse.posicion.x, this.mouse.posicion.y);
-    }
-    if (this.teclado[2]) {
-      this.crearUnEnemigo(2, this.mouse.posicion.x, this.mouse.posicion.y);
-    } else if (this.teclado[3]) {
-      this.crearUnEnemigo(3, this.mouse.posicion.x, this.mouse.posicion.y);
-    } else if (this.teclado[4]) {
-      this.crearUnEnemigo(4, this.mouse.posicion.x, this.mouse.posicion.y);
-    } else if (this.teclado[5]) {
-      this.crearUnEnemigo(5, this.mouse.posicion.x, this.mouse.posicion.y);
-    } else if (this.teclado[6]) {
-      this.crearUnEnemigo(6, this.mouse.posicion.x, this.mouse.posicion.y);
-    } else if (this.teclado[7]) {
-      this.crearUnEnemigo(7, this.mouse.posicion.x, this.mouse.posicion.y);
-    } else if (this.teclado["c"]) {
-      this.crearUnCivil(this.mouse.posicion.x, this.mouse.posicion.y);
-    } else if (this.teclado["p"]) {
-      this.crearPolicias(this.mouse.posicion.x, this.mouse.posicion.y);
-    }
-  }
-
   agregarInteractividadDelMouse() {
     this.pixiApp.canvas.oncontextmenu = (event) => {
       event.preventDefault();
     };
     // Escuchar el evento mousemove
     this.pixiApp.canvas.onmousemove = (event) => {
-      this.segunQueTeclaEstaApretadaHacerCosas();
       this.mouse.posicion = this.convertirCoordenadaDelMouse(event.x, event.y);
     };
 
@@ -430,7 +355,6 @@ class Juego {
 
     if (this.particleSystem) this.particleSystem.update();
     if (this.ui) this.ui.tick();
-    this.chequearQueNoHayaMuertosConBarraDeVida();
 
     this.hacerQLaCamaraSigaAAlguien();
     this.calcularFPS();
@@ -440,37 +364,6 @@ class Juego {
     // Object.values(this.grilla.celdas).forEach((celda) => celda.dibujar());
     for (let obstaculo of this.obstaculos) obstaculo.dibujarCirculo();
     for (let unpersona of this.personas) unpersona.dibujarCirculo();
-  }
-
-  chequearQueNoHayaMuertosConBarraDeVida() {
-    this.containerPrincipal.children
-      .filter((child) => child.label.startsWith("persona muerta"))
-      .forEach((k) => {
-        const containerBarraVida = k.children.find((k) =>
-          k.label.startsWith("containerBarraVida")
-        );
-
-        const spriteAnimado = k.children.find((k) =>
-          k.label.startsWith("animatedSprite")
-        );
-
-        //fade out muertos
-        if (spriteAnimado) {
-          spriteAnimado.alpha *= 0.996;
-          spriteAnimado.alpha -= 0.0001;
-
-          if (spriteAnimado.alpha < 0.01) {
-            k.removeChild(spriteAnimado);
-            spriteAnimado.destroy();
-            this.containerPrincipal.removeChild(k);
-          }
-        }
-
-        if (containerBarraVida) {
-          k.removeChild(containerBarraVida);
-          containerBarraVida.destroy();
-        }
-      });
   }
 
   calcularFPS() {

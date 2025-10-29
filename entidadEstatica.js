@@ -9,6 +9,4 @@ class EntidadEstatica extends GameObject {
   calcularRadio() {
     this.radio = (this.sprite.width + Math.sqrt(this.sprite.height)) * 0.25;
   }
-
-  tick() {}
 }

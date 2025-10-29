@@ -141,13 +141,8 @@ class Persona extends GameObject {
     const cantDeCeldasQuePuedoVer = Math.ceil(
       this.vision / this.juego.grilla.anchoCelda
     );
-    // console.log(
-    //   "cantDeCeldasQuePuedoVer",
-    //   cantDeCeldasQuePuedoVer,
-    //   this.nombre,
-    //   this.vision,
-    //   this.juego.grilla.anchoCelda
-    // );
+    console.log("cantDeCeldasQuePuedoVer", cantDeCeldasQuePuedoVer, this.nombre, this.vision, this.juego.grilla.anchoCelda);
+    
     const personasQueEstanEnMisCeldasVecinas =
       this.celdaActual.obtenerEntidadesAcaYEnCEldasVecinas(
         cantDeCeldasQuePuedoVer
@@ -526,6 +521,7 @@ class Persona extends GameObject {
   }
 
   caminarSinRumbo() {
+    console.log("1")
     if (!this.container || !this.sprite) return;
 
     if (!this.targetRandom) {

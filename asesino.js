@@ -11,29 +11,14 @@ class Asesino extends Persona {
     this.factorIrAlTarget = 0.9;
     this.distanciaParaEmpezarABajarLaVelocidad = this.radio * 20;
     this.distanciaAlTarget = Infinity;
-    this.esperarAQueTengaSpriteCargado(() => {
-      this.crearBarritaVida();
-    });
     juego.targetCamara = this
   }
 
   morir() {
     super.morir();
-    // this.juego.finDelJuego();
-  }
-  recibirDanio(danio) {
-    super.recibirDanio(danio);
   }
 
   tick() {
-    /*
-
-El protagonista no usa separación automática, ni alineacion ni cohesion. Pero sigue al mouse.
-Si esta cerca del target, no repele obstaculos.
-Si esta muy lejos del target, repelo obstaculos de forma piola, para ir llegando, pero si queres meterte en algun recoveco
-y le seguimos aplicando la fuerza que repele obstaculos, no va a llegar
-
-*/
     this.actualizarMiPosicionEnLaGrilla();
     this.verificarSiEstoyMuerto();
 

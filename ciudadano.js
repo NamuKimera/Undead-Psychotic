@@ -15,11 +15,11 @@ class Ciudadano extends Persona {
   }
 
   tick() {
-    if (this.muerto) return;
+    // if (this.muerto) return;
     this.verificarSiEstoyMuerto();
 
     this.percibirEntorno();
-    this.caminarSinRumbo();
+    // this.caminarSinRumbo();
     // this.cohesion();
     this.alineacion();
     this.separacion();
