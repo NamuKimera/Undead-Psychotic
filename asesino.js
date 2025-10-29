@@ -17,7 +17,7 @@ class Asesino extends Persona {
 
     // tomo como parametro la textura y creo un sprite
 
-    this.cargarSpritesAnimados(textureData);
+    this.cargarSpritesAnimados(textureData, 15);
 
     this.cambiarAnimacion("caminarAbajo");
 

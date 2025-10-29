@@ -54,21 +54,7 @@ class GameObject {
     this.spritesAnimados[cual].visible = true;
   }
 
-  cargarSpritesAnimados(textureData) {
-    for (let key of Object.keys(textureData.animations)) {
-      this.spritesAnimados[key] = new PIXI.AnimatedSprite(
-        textureData.animations[key]
-      );
-
-      this.spritesAnimados[key].play();
-      this.spritesAnimados[key].loop = true;
-      this.spritesAnimados[key].animationSpeed = 0.1;
-      this.spritesAnimados[key].scale.set(2);
-      this.spritesAnimados[key].anchor.set(0.5, 1);
-
-      this.container.addChild(this.spritesAnimados[key]);
-    }
-  }
+  
 
   tick() {
     //TODO: hablar de deltatime

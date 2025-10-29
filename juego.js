@@ -57,15 +57,7 @@ class Juego {
     document.body.appendChild(this.pixiApp.canvas);
     
 
-    for (let i = 0; i < 30; i++) {
-      const x = 0.5 * this.width;
-      const y = 0.5 * this.height;
-      //crea una instancia de clase Conejito, el constructor de dicha clase toma como parametros la textura
-      // q queremos usar,X,Y y una referencia a la instancia del juego (this)
-      const animacionesProtagonista = await PIXI.Assets.load("assets/personajes/img/personaje.json");
-      const protagonista = new Asesino(animacionesProtagonista, x, y, this);
-      this.personas.push(protagonista);
-    }
+    this.crearAsesino()
     this.targetCamara = this.asesino;
 
     //agregamos el metodo this.gameLoop al ticker.
@@ -80,9 +72,9 @@ class Juego {
   }
 
   async crearAsesino() {
-    const x = 3500;
-    const y = 1500;
-    const animacionesAsesino = await PIXI.Assets.load("assets/personajes/img/personaje.json");
+    const x = 300;
+    const y = 100;
+    const animacionesAsesino = await PIXI.Assets.load("assets/personajes/img/asesino.json");
     const protagonista = new Asesino(animacionesAsesino, x, y, this);
     this.personas.push(protagonista);
     this.asesino = protagonista;
@@ -123,6 +115,35 @@ class Juego {
     };
   }
 
+  hacerQLaCamaraSigaAAlguien() {
+    if (!this.targetCamara) return;
+    // Ajustar la posición considerando el zoom actual
+    let targetX = -this.targetCamara.posicion.x * this.zoom + this.width / 2;
+    let targetY = -this.targetCamara.posicion.y * this.zoom + this.height / 2;
+
+    const x = (targetX - this.containerPrincipal.x) * 0.1;
+    const y = (targetY - this.containerPrincipal.y) * 0.1;
+
+    this.moverContainerPrincipalA(
+      this.containerPrincipal.x + x,
+      this.containerPrincipal.y + y
+    );
+  }
+
+  moverContainerPrincipalA(x, y) {
+    this.containerPrincipal.x = x;
+    this.containerPrincipal.y = y;
+    this.containerBG.x = x;
+    this.containerBG.y = y;
+  }
+
+  calcularFPS() {
+    this.deltaTime = performance.now() - this.ahora;
+    this.ahora = performance.now();
+    this.fps = 1000 / this.deltaTime;
+    this.ratioDeltaTime = this.deltaTime / 16.66;
+  }
+
   gameLoop(time) {
     //iteramos por todos los conejitos
     for (let unaPersona of this.personas) {
@@ -130,6 +151,9 @@ class Juego {
       unaPersona.tick();
       unaPersona.render();
     }
+
+    this.hacerQLaCamaraSigaAAlguien();
+    this.calcularFPS();
   }
 
   async crearCruzTarget() {

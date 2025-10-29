@@ -35,4 +35,20 @@ class Persona extends GameObject {
     this.crearSombra();
     
   }
+
+  async cargarSpritesAnimados(textureData, escala) {
+    for (let key of Object.keys(textureData.animations)) {
+      this.spritesAnimados[key] = new PIXI.AnimatedSprite(
+        textureData.animations[key]
+      );
+
+      this.spritesAnimados[key].play();
+      this.spritesAnimados[key].loop = true;
+      this.spritesAnimados[key].animationSpeed = 0.1;
+      this.spritesAnimados[key].scale.set(escala);
+      this.spritesAnimados[key].anchor.set(0.5, 1);
+
+      this.container.addChild(this.spritesAnimados[key]);
+    }
+  }
 }
