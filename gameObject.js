@@ -13,7 +13,7 @@ class GameObject {
   distanciaPersonal = 20;
   distanciaParaLlegar = 300;
 
-  constructor(textureData, x, y, juego) {
+  constructor(x, y, juego) {
     this.container = new PIXI.Container();
 
     this.container.name = "container";
@@ -24,8 +24,6 @@ class GameObject {
     this.aceleracion = { x: 0, y: 0 };
 
     this.juego = juego;
-    this.cargarSpritesAnimados(textureData, 15);
-    this.cambiarAnimacion("idleAbajo")
     //generamos un ID para este conejito
     this.id = Math.floor(Math.random() * 99999999);
 
@@ -62,11 +60,9 @@ class GameObject {
     this.spritesAnimados[cual].visible = true;
   }
 
-  async cargarSpritesAnimados(textureData, escala) {
+  cargarSpritesAnimados(textureData, escala) {
     for (let key of Object.keys(textureData.animations)) {
-      this.spritesAnimados[key] = new PIXI.AnimatedSprite(
-        textureData.animations[key]
-      );
+      this.spritesAnimados[key] = new PIXI.AnimatedSprite(textureData.animations[key]);
 
       this.spritesAnimados[key].play();
       this.spritesAnimados[key].loop = true;
@@ -78,38 +74,7 @@ class GameObject {
     }
   }
 
-  tick() {
-    //TODO: hablar de deltatime
-    this.aceleracion.x = 0;
-    this.aceleracion.y = 0;
-
-    this.separacion();
-
-    this.escapar();
-    this.perseguir();
-    this.limitarAceleracion();
-    this.velocidad.x +=
-      this.aceleracion.x * this.juego.pixiApp.ticker.deltaTime;
-    this.velocidad.y +=
-      this.aceleracion.y * this.juego.pixiApp.ticker.deltaTime;
-
-    //variaciones de la velocidad
-    this.rebotar();
-    this.aplicarFriccion();
-    this.limitarVelocidad();
-
-    //pixeles por frame
-    this.posicion.x += this.velocidad.x * this.juego.pixiApp.ticker.deltaTime;
-    this.posicion.y += this.velocidad.y * this.juego.pixiApp.ticker.deltaTime;
-
-    //guardamos el angulo
-    this.angulo =
-      radianesAGrados(Math.atan2(this.velocidad.y, this.velocidad.x)) + 180;
-
-    this.velocidadLineal = Math.sqrt(
-      this.velocidad.x * this.velocidad.x + this.velocidad.y * this.velocidad.y
-    );
-  }
+  
 
   separacion() {
     let promedioDePosicionDeAquellosQEstanMuyCercaMio = { x: 0, y: 0 };
@@ -156,10 +121,10 @@ class GameObject {
 
     if ((this.angulo > 315 && this.angulo < 360) || this.angulo < 45) {
       this.cambiarAnimacion("caminarDerecha");
-      this.spritesAnimados.caminarDerecha.scale.x = -2;
+      this.spritesAnimados.caminarDerecha.scale.x = -15;
     } else if (this.angulo > 135 && this.angulo < 225) {
       this.cambiarAnimacion("caminarDerecha");
-      this.spritesAnimados.caminarDerecha.scale.x = 2;
+      this.spritesAnimados.caminarDerecha.scale.x = 15;
     } else if (this.angulo < 135 && this.angulo > 45) {
       this.cambiarAnimacion("caminarArriba");
     } else {
@@ -198,6 +163,14 @@ class GameObject {
 
   asignarTarget(quien) {
     this.target = quien;
+  }
+
+  cambiarVelocidadDeAnimacionSegunVelocidadLineal() {
+    const keys = Object.keys(this.spritesAnimados);
+    for (let key of keys) {
+      this.spritesAnimados[key].animationSpeed =
+        this.velocidadLineal * 0.05 * this.juego.pixiApp.ticker.deltaTime;
+    }
   }
 
   perseguir() {
@@ -244,6 +217,36 @@ class GameObject {
     this.velocidad.y = y;
   }
 
+  tick() {
+    //TODO: hablar de deltatime
+    this.aceleracion.x = 0;
+    this.aceleracion.y = 0;
+
+    this.separacion();
+
+    this.escapar();
+    this.perseguir();
+    this.limitarAceleracion();
+    this.velocidad.x +=
+      this.aceleracion.x * this.juego.pixiApp.ticker.deltaTime;
+    this.velocidad.y +=
+      this.aceleracion.y * this.juego.pixiApp.ticker.deltaTime;
+
+    //variaciones de la velocidad
+    this.rebotar();
+    this.aplicarFriccion();
+    this.limitarVelocidad();
+
+    //pixeles por frame
+    this.posicion.x += this.velocidad.x * this.juego.pixiApp.ticker.deltaTime;
+    this.posicion.y += this.velocidad.y * this.juego.pixiApp.ticker.deltaTime;
+
+    //guardamos el angulo
+    this.angulo = radianesAGrados(Math.atan2(this.velocidad.y, this.velocidad.x)) + 180;
+
+    this.velocidadLineal = Math.sqrt(this.velocidad.x * this.velocidad.x + this.velocidad.y * this.velocidad.y);
+  }
+
   render() {
     this.container.x = this.posicion.x;
     this.container.y = this.posicion.y;
@@ -252,13 +255,5 @@ class GameObject {
 
     this.cambiarDeSpriteAnimadoSegunAngulo();
     this.cambiarVelocidadDeAnimacionSegunVelocidadLineal();
-  }
-
-  cambiarVelocidadDeAnimacionSegunVelocidadLineal() {
-    const keys = Object.keys(this.spritesAnimados);
-    for (let key of keys) {
-      this.spritesAnimados[key].animationSpeed =
-        this.velocidadLineal * 0.05 * this.juego.pixiApp.ticker.deltaTime;
-    }
   }
 }

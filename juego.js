@@ -37,15 +37,10 @@ class Juego {
     // //agregamos el elementos canvas creado por pixi en el documento html
     document.body.appendChild(this.pixiApp.canvas);
 
-    for (let i = 0; i < 30; i++) {
-      const x = 0.5 * this.width;
-      const y = 0.5 * this.height;
-      //crea una instancia de clase Conejito, el constructor de dicha clase toma como parametros la textura
-      // q queremos usar,X,Y y una referencia a la instancia del juego (this)
-      const animacionesProtagonista = await PIXI.Assets.load("assets/personajes/img/asesino.json");
-      const protagonista = new Asesino(animacionesProtagonista, x, y, this);
-      this.personas.push(protagonista);
-    }
+    this.crearAsesino()
+    this.crearCiudadanos(50)
+    this.crearPolicias(20)
+    
 
     //agregamos el metodo this.gameLoop al ticker.
     //es decir: en cada frame vamos a ejecutar el metodo this.gameLoop
@@ -58,20 +53,47 @@ class Juego {
     this.asignarElMouseComoTargetATodosLosConejitos();
   }
 
+
+  async crearAsesino() {
+    const x = 0.5 * this.width;
+    const y = 0.5 * this.height;
+    //crea una instancia de clase Conejito, el constructor de dicha clase toma como parametros la textura
+    // q queremos usar,X,Y y una referencia a la instancia del juego (this)
+    const animacionesProtagonista = await PIXI.Assets.load("assets/personajes/img/asesino.json");
+    const protagonista = new Asesino(animacionesProtagonista, x, y, this);
+    this.personas.push(protagonista);
+  }
+
+  async crearCiudadanos(cant) {
+    for (let i = 0; i < cant; i++) {
+      const x = 0.5 * this.width;
+      const y = 0.5 * this.height;
+      //crea una instancia de clase Conejito, el constructor de dicha clase toma como parametros la textura
+      // q queremos usar,X,Y y una referencia a la instancia del juego (this)
+      const animacionesCiudadano = await PIXI.Assets.load("assets/personajes/img/ciudadano.json");
+      const protagonista = new Ciudadano(animacionesCiudadano, x, y, this);
+      this.personas.push(protagonista);
+    }
+  }
+
+  async crearPolicias(cant) {
+    for (let i = 0; i < cant; i++) {
+      const x = 0.5 * this.width;
+      const y = 0.5 * this.height;
+      //crea una instancia de clase Conejito, el constructor de dicha clase toma como parametros la textura
+      // q queremos usar,X,Y y una referencia a la instancia del juego (this)
+      const animacionesProtagonista = await PIXI.Assets.load("assets/personajes/img/policia.json");
+      const protagonista = new Policia(animacionesProtagonista, x, y, this);
+      this.personas.push(protagonista);
+    }
+  }
+
+
   agregarInteractividadDelMouse() {
     // Escuchar el evento mousemove
     this.pixiApp.canvas.onmousemove = (event) => {
       this.mouse.posicion = { x: event.x, y: event.y };
     };
-  }
-
-  gameLoop(time) {
-    //iteramos por todos los conejitos
-    for (let unaPersona of this.personas) {
-      //ejecutamos el metodo tick de cada conejito
-      unaPersona.tick();
-      unaPersona.render();
-    }
   }
 
   getConejitoRandom() {
@@ -95,9 +117,20 @@ class Juego {
       unaPersona.perseguidor = this.getConejitoRandom();
     }
   }
+  
   asignarElMouseComoPerseguidorATodosLosConejitos() {
     for (let unaPersona of this.personas) {
       unaPersona.perseguidor = this.mouse;
+    }
+  }
+
+
+  gameLoop(time) {
+    //iteramos por todos los conejitos
+    for (let unaPersona of this.personas) {
+      //ejecutamos el metodo tick de cada conejito
+      unaPersona.tick();
+      unaPersona.render();
     }
   }
 }

@@ -2,7 +2,9 @@ class Policia extends Persona {
   constructor(textureData, x, y, juego) {
     super(x, y, juego);
     this.bando = "policia";
+    console.log("La Ley fue insertada correctamente", textureData, x, y, juego)
     this.cargarSpritesAnimados(textureData, 15);
+    this.cambiarAnimacion("idleAbajo")
     this.factorPerseguir = 0.4;
     this.factorEscapar = 1 - this.coraje;
     this.distanciaParaLlegarALTarget = 500;
@@ -14,7 +16,8 @@ class Policia extends Persona {
   }
 
   tick() {
-    if (this.muerto) return;
+    super.tick()
+    /*if (this.muerto) return;
     this.verificarSiEstoyMuerto();
 
     this.percibirEntorno();
@@ -31,6 +34,6 @@ class Policia extends Persona {
 
     this.aplicarFisica();
 
-    this.calcularAnguloYVelocidadLineal();
+    this.calcularAnguloYVelocidadLineal();*/
   }
 }

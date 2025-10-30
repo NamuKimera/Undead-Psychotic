@@ -2,6 +2,7 @@ class Persona extends GameObject {
   spritesAnimados = {}
   constructor(x, y, juego) {
     super(x, y, juego);
+    console.log("El Asesino fue insertado correctamente", x, y, juego)
     this.container.label = "persona - " + this.id;
     this.noPuedoPegarPeroEstoyEnCombate = false;
     this.muerto = false;
@@ -31,11 +32,8 @@ class Persona extends GameObject {
     this.velocidadMaxima = 3;
     this.amigos = [];
 
-    this.crearSombra();
-    this.esperarAQueTengaSpriteCargado(() => {
-      this.crearGloboDeDialogo();
-      this.crearFSMparaAnimacion();
-    });
+    // this.crearSombra();
+    // this.esperarAQueTengaSpriteCargado(() => {this.crearGloboDeDialogo(); this.crearFSMparaAnimacion();});
   }
 
   crearFSMparaAnimacion() {
@@ -116,7 +114,7 @@ class Persona extends GameObject {
     );
   }
 
-  getPersonasCerca() {
+  /*getPersonasCerca() {
     const cantDeCeldasQuePuedoVer = Math.ceil(
       this.vision / this.juego.grilla.anchoCelda
     );
@@ -125,26 +123,10 @@ class Persona extends GameObject {
     const personasQueEstanEnMisCeldasVecinas = this.celdaActual.obtenerEntidadesAcaYEnCEldasVecinas(cantDeCeldasQuePuedoVer);
 
     return personasQueEstanEnMisCeldasVecinas.filter((persona) => calcularDistancia(this.posicion, persona.posicion) < this.vision && !persona.muerto);
-  }
+  }*/
 
-  getPersonasCercaVIEJO() {
-    return this.juego.personas.filter(
-      (persona) =>
-        calcularDistancia(this.posicion, persona.posicion) < this.vision &&
-        !persona.muerto
-    );
-  }
-
-  getAmigosCerca() {
-    return this.personasCerca.filter((persona) =>
-      this.amigos.includes(persona)
-    );
-  }
-
-  getEnemigosCerca() {
-    return this.personasCerca.filter((persona) =>
-      this.enemigos.includes(persona)
-    );
+  getPersonasCerca() {
+    return this.juego.personas.filter((persona) => calcularDistancia(this.posicion, persona.posicion) < this.vision && !persona.muerto);
   }
 
   buscarObstaculosBienCerquitaMio() {
@@ -212,14 +194,6 @@ class Persona extends GameObject {
   percibirEntorno() {
     //todas las personas en mi rango de vision
     this.personasCerca = this.getPersonasCerca();
-    //de esas personas cuales son amigas
-    this.amigosCerca = this.getAmigosCerca();
-    //de esas personas cuales son enemigos
-    this.enemigosCerca = this.getEnemigosCerca();
-    //de los enemigos cerca, el mas cercano
-    this.enemigoMasCerca = this.buscarEnemigoMasCerca();
-
-    this.buscarObstaculosBienCerquitaMio();
   }
 
   noChocarConObstaculos() {
@@ -240,10 +214,6 @@ class Persona extends GameObject {
       this.aceleracion.y += vectorRepulsion.y;
     }
   }
-
-  tick() {
-    console.warn("cada clase deberia implementar su propio tick");
-  }
   
   calcularAnguloYVelocidadLineal() {
     /**
@@ -261,31 +231,6 @@ class Persona extends GameObject {
      */
     this.angulo = radianesAGrados(Math.atan2(this.velocidad.y, this.velocidad.x)) + 180;
     this.velocidadLineal = calcularDistancia(this.velocidad, { x: 0, y: 0 });
-  }
-
-  cambiarAnimacion(cual) {
-    //hacemos todos invisibles
-    for (let key of Object.keys(this.spritesAnimados)) {
-      this.spritesAnimados[key].visible = false;
-    }
-    //y despues hacemos visible el q queremos
-    this.spritesAnimados[cual].visible = true;
-  }
-
-  async cargarSpritesAnimados(textureData, escala) {
-    for (let key of Object.keys(textureData.animations)) {
-      this.spritesAnimados[key] = new PIXI.AnimatedSprite(
-        textureData.animations[key]
-      );
-
-      this.spritesAnimados[key].play();
-      this.spritesAnimados[key].loop = true;
-      this.spritesAnimados[key].animationSpeed = 0.1;
-      this.spritesAnimados[key].scale.set(escala);
-      this.spritesAnimados[key].anchor.set(0.5, 1);
-
-      this.container.addChild(this.spritesAnimados[key]);
-    }
   }
 
   alineacion() {
@@ -315,7 +260,7 @@ class Persona extends GameObject {
     this.aceleracion.y += this.factorAlineacion * vectorNuevo.y;
   }
 
-  cohesion() {
+  /*cohesion() {
     let cont = 0;
     //verctor vacio donde vamos a ir sumando posiciones
     let vectorPromedioDePosiciones = { x: 0, y: 0 };
@@ -358,11 +303,10 @@ class Persona extends GameObject {
 
     this.aceleracion.x += this.factorCohesion * vectorNuevo.x;
     this.aceleracion.y += this.factorCohesion * vectorNuevo.y;
-  }
+  }*/
 
-  separacion() {
-    const personasEnMiCeldaYAlrededores =
-      this.celdaActual.obtenerEntidadesAcaYEnCEldasVecinas(1); //this.juego.personas;
+  /*separacion() {
+    // const personasEnMiCeldaYAlrededores = this.celdaActual.obtenerEntidadesAcaYEnCEldasVecinas(1); //this.juego.personas;
 
     for (const persona of personasEnMiCeldaYAlrededores) {
       if (persona == this) continue;
@@ -376,7 +320,7 @@ class Persona extends GameObject {
       this.aceleracion.x += vectorNuevo.x;
       this.aceleracion.y += vectorNuevo.y;
     }
-  }
+  }*/
 
   siEstoyPeleandoMirarHaciaMiOponente() {
     if (!this.enemigoMasCerca) return;
@@ -549,23 +493,6 @@ class Persona extends GameObject {
     }
     this.distanciaAlEnemigoMasCerca = distanciaMasCerca;
     return enemigoMasCerca;
-  }
-
-  cambiarDeSpriteAnimadoSegunAngulo() {
-    //0 grados es a la izq, abre en sentido horario, por lo cual 180 es a la derecha
-    //90 es para arriba
-    //270 abajo
-    if ((this.angulo > 315 && this.angulo < 360) || this.angulo < 45) {
-      this.cambiarAnimacion("caminarDerecha");
-      this.spritesAnimados.caminarDerecha.scale.x = -2;
-    } else if (this.angulo > 135 && this.angulo < 225) {
-      this.cambiarAnimacion("caminarDerecha");
-      this.spritesAnimados.caminarDerecha.scale.x = 2;
-    } else if (this.angulo < 135 && this.angulo > 45) {
-      this.cambiarAnimacion("caminarArriba");
-    } else {
-      this.cambiarAnimacion("caminarAbajo");
-    }
   }
 
   render() {

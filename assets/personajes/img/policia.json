@@ -193,6 +193,24 @@
       }
     }
   },
+  "animations": {
+    "idleAbajo": [
+      "p00.png"
+    ],
+    "idleArriba": [
+      "p01.png"
+    ],
+    "caminarDerecha": [
+      "p02.png",
+      "p03.png"
+    ],
+    "caminarAbajo": [
+      "p00.png"
+    ],
+    "caminarArriba": [
+      "p04.png"
+    ]
+  },
   "meta": {
     "app": "http://free-tex-packer.com",
     "version": "0.6.7",
