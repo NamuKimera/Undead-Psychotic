@@ -74,8 +74,6 @@ class GameObject {
     }
   }
 
-  
-
   separacion() {
     let promedioDePosicionDeAquellosQEstanMuyCercaMio = { x: 0, y: 0 };
     let contador = 0;
@@ -168,8 +166,7 @@ class GameObject {
   cambiarVelocidadDeAnimacionSegunVelocidadLineal() {
     const keys = Object.keys(this.spritesAnimados);
     for (let key of keys) {
-      this.spritesAnimados[key].animationSpeed =
-        this.velocidadLineal * 0.05 * this.juego.pixiApp.ticker.deltaTime;
+      this.spritesAnimados[key].animationSpeed = this.velocidadLineal * 0.05 * this.juego.pixiApp.ticker.deltaTime;
     }
   }
 
@@ -227,10 +224,8 @@ class GameObject {
     this.escapar();
     this.perseguir();
     this.limitarAceleracion();
-    this.velocidad.x +=
-      this.aceleracion.x * this.juego.pixiApp.ticker.deltaTime;
-    this.velocidad.y +=
-      this.aceleracion.y * this.juego.pixiApp.ticker.deltaTime;
+    this.velocidad.x += this.aceleracion.x * this.juego.pixiApp.ticker.deltaTime;
+    this.velocidad.y += this.aceleracion.y * this.juego.pixiApp.ticker.deltaTime;
 
     //variaciones de la velocidad
     this.rebotar();

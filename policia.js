@@ -5,7 +5,7 @@ class Policia extends Persona {
     console.log("La Ley fue insertada correctamente", textureData, x, y, juego)
     this.cargarSpritesAnimados(textureData, 15);
     this.cambiarAnimacion("idleAbajo")
-    this.factorPerseguir = 0.4;
+    this.factorPerseguir = 0.9;
     this.factorEscapar = 1 - this.coraje;
     this.distanciaParaLlegarALTarget = 500;
 
@@ -13,6 +13,7 @@ class Policia extends Persona {
     this.aceleracionMaxima = 0.11;
     this.velocidadMaxima = 1;
     this.factorAlineacion = 0.33;
+    this.asignarTarget(this.juego.mouse);
   }
 
   tick() {

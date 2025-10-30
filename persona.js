@@ -185,10 +185,8 @@ class Persona extends GameObject {
     }
 
     // Aplicar la fuerza total a la aceleración
-    this.aceleracion.x +=
-      fuerzaRepulsionTotal.x * this.factorRepelerSuavementeObstaculos;
-    this.aceleracion.y +=
-      fuerzaRepulsionTotal.y * this.factorRepelerSuavementeObstaculos;
+    this.aceleracion.x += fuerzaRepulsionTotal.x * this.factorRepelerSuavementeObstaculos;
+    this.aceleracion.y += fuerzaRepulsionTotal.y * this.factorRepelerSuavementeObstaculos;
   }
   
   percibirEntorno() {
